@@ -159,6 +159,10 @@ briefing compactness, and outcome quality.
 - Trigger benchmark: ~200 runs across 4 description variants — **zero false-fires**,
   which is why the budget rules can afford to be generous about consulting.
 
+## Author
+
+Built by [Romuald Członkowski @aiadvisors](https://aiadvisors.pl/en).
+
 ## License
 
-MIT
+MIT — © 2026 [Romuald Członkowski @aiadvisors](https://aiadvisors.pl/en)
