@@ -38,6 +38,16 @@ rework, thousands of Opus tokens, and your time.
 /plugin install fable-advisor@fable-advisor
 ```
 
+**Recommended:** add this line to your project or global `CLAUDE.md` — it makes the
+skill fire deterministically instead of relying on Claude's own skill-triggering
+judgment (see [Making it fire reliably](#making-it-fire-reliably) for why):
+
+```
+Before committing to any costly-to-revert decision (architecture, DB schema, API/webhook
+contracts, technology selection, production migration plans), or when stuck after 2+
+failed fix attempts, consult the fable-advisor skill first.
+```
+
 Requirements: Claude Code with Fable 5 available as a subagent model. Designed for
 sessions where the base model is Opus (works from any orchestrator model below Fable).
 
@@ -116,8 +126,10 @@ I'm torn between Postgres LISTEN/NOTIFY and a proper queue for job dispatch. dec
 review my deploy plan for Saturday's production migration and fix anything risky before I run it
 ```
 
-The skill also triggers on its own — without Fable being named — whenever a task hits a
-costly-to-revert decision, a stuck debugging loop, or a pre-production review.
+The skill can also trigger without Fable being named when a task hits a costly-to-revert
+decision, a stuck debugging loop, or a pre-production review — but unnamed triggering is
+~50–60% reliable in our benchmark. For deterministic behavior, use the one-line
+`CLAUDE.md` setup from the Install section.
 
 ## Evals
 
@@ -126,6 +138,21 @@ architecture-decision task (should consult once), a trivial-change task (should 
 consult at all), and a production-migration plan review (should consult before
 finalizing). Runs compare with-skill vs. no-skill orchestrators on consult discipline,
 briefing compactness, and outcome quality.
+
+**Measured results (v0.1, 3 scenarios × with/without skill, Opus orchestrators):**
+
+- Consult discipline was perfect: exactly **1** consult on each costly-to-revert task,
+  **0** on the trivial task. Briefings came in at ~511 words — well under budget — and
+  every consult was announced to the user with the verdict relayed afterward.
+- On the trivial task the skill added **zero overhead** (same duration as baseline,
+  ~half the output tokens).
+- The consults earned their keep: in the architecture task Fable corrected the polling
+  cadence and contributed the failure-mode list; in the migration review it confirmed
+  the orchestrator's 8 fixes and **added 3 gaps the orchestrator had missed** (window
+  pre-staging, owner-account ordering before credential import, webhook re-registration
+  verification).
+- Trigger benchmark: ~200 runs across 4 description variants — **zero false-fires**,
+  which is why the budget rules can afford to be generous about consulting.
 
 ## License
 
