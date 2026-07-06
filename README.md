@@ -41,6 +41,28 @@ rework, thousands of Opus tokens, and your time.
 Requirements: Claude Code with Fable 5 available as a subagent model. Designed for
 sessions where the base model is Opus (works from any orchestrator model below Fable).
 
+## Making it fire reliably
+
+We benchmarked the skill's triggering on 20 realistic queries (10 should-fire, 10 tricky
+near-miss negatives) across four description variants, ~200 runs on Opus. Result: **zero
+false-fires** in every variant — the skill never triggered on trivial changes, decided
+architectures, or questions *about* Fable — but recall on bare decision prompts plateaued
+around 50–60% regardless of description wording. The cause is structural: Claude Code
+consults skills only for tasks it can't handle alone, and Opus believes (correctly, in a
+narrow sense) that it can answer a design question itself. That belief is the exact
+failure mode this skill exists to counter.
+
+If you want deterministic triggering, add one line to your project or global `CLAUDE.md`:
+
+```
+Before committing to any costly-to-revert decision (architecture, DB schema, API/webhook
+contracts, technology selection, production migration plans), or when stuck after 2+
+failed fix attempts, consult the fable-advisor skill first.
+```
+
+Naming it also works: prompts that mention Fable, a "second opinion", or "check with a
+stronger model" trigger far more reliably (see Prompts to try below).
+
 ## How it works
 
 **The gate — two questions before every consult:**
