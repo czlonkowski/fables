@@ -59,9 +59,10 @@ advice at premium prices.
 
 ## Budget rules (hard)
 
-- **Default one consult per task. Hard cap: three Fable interactions per task** (spawns
-  and follow-ups combined). Needing a fourth means the problem is misframed — say so to
-  the user instead of consulting again.
+- **Default one consult per task. Hard cap: three executed Fable interactions per task**
+  (spawns and follow-ups combined; spawn attempts rejected before running don't count).
+  Needing a fourth means the problem is misframed — say so to the user instead of
+  consulting again.
 - **Announce every consult** in one line before spawning, so the user sees the spend:
   `Consulting Fable on <decision> (trigger: <which>, consult 1/3).`
 - **Batch questions.** If several decisions are pending in one task, one consult covering
@@ -87,6 +88,11 @@ Agent(
   run_in_background: false            # the verdict blocks your next step
 )
 ```
+
+If the spawn is rejected because of the `name` parameter (this happens when you are
+yourself a subagent — named spawns are top-level-only), retry the same call without
+`name`; follow-ups then need a fresh spawn carrying a one-paragraph recap instead of
+SendMessage. A rejected spawn that never executed does not count against the budget.
 
 Fallback — if neither `fable-advisor` nor `fable-advisor:fable-advisor` is in the
 available agent list, spawn

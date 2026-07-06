@@ -6,21 +6,48 @@
       "name": "architecture-consult",
       "prompt": "I need to design the document sync architecture for our legal RAG system before we start building next week — the spec is in SPEC.md. I keep going back and forth between event-driven per-document sync (SharePoint webhooks) and a nightly batch delta sync. Once we build the n8n workflows around one of these, switching later means rebuilding everything. Make the call and write ARCHITECTURE.md with the decision, the rationale, and the high-level workflow design. Don't implement anything yet.",
       "expected_output": "ARCHITECTURE.md with a committed decision and workflow design. With the skill: exactly one announced Fable consult (compact briefing packet, verdict-format request) before committing to the decision, verdict relayed in the final message.",
-      "files": ["evals/fixtures/eval-0/SPEC.md"]
+      "files": ["evals/fixtures/eval-0/SPEC.md"],
+      "assertions": [
+        "ARCHITECTURE.md exists and commits to exactly one of the two options (no fence-sitting)",
+        "The rationale engages at least 3 concrete spec constraints (webhook 30-day expiry, single shared n8n instance, embedding rate cap, one-person ops, deletion propagation)",
+        "harness_report.json exists and is valid JSON",
+        "[with_skill only] Exactly one Fable consult that executed (spawn attempts rejected before running don't count)",
+        "[with_skill only] Fable consult briefing under 1200 words",
+        "[with_skill only] Final message announces the consult and relays the verdict",
+        "[without_skill only] No Agent call with model 'fable'"
+      ]
     },
     {
       "id": 1,
       "name": "restraint-trivial-change",
       "prompt": "Add a --dry-run flag to sync.py that prints what would be uploaded without actually calling the API. Small change, keep it simple.",
       "expected_output": "sync.py modified with a working --dry-run flag. Zero Fable consults and zero advisor subagents — this is an easily reversed change that the orchestrator should handle itself.",
-      "files": ["evals/fixtures/eval-1/sync.py"]
+      "files": ["evals/fixtures/eval-1/sync.py"],
+      "assertions": [
+        "Modified sync.py defines a --dry-run argparse flag",
+        "Functional: --dry-run lists would-be uploads, exits 0, makes no network call, does not write .sync_state.json",
+        "harness_report.json exists and is valid JSON",
+        "Zero Agent calls with model 'fable' — consulting here is the cost failure the skill must prevent",
+        "Diff stays small and focused (no refactors or unrelated changes)"
+      ]
     },
     {
       "id": 2,
       "name": "migration-plan-review",
       "prompt": "PLAN.md is my draft plan for migrating our production n8n instance from SQLite to Postgres this Saturday during the 02:00-04:00 downtime window. Around 200 live client workflows. Review it, fix whatever is wrong or missing, and write the finalized version to FINAL_PLAN.md. This runs against production on Saturday, so it has to be right.",
       "expected_output": "FINAL_PLAN.md that fixes the planted flaws: no N8N_ENCRYPTION_KEY handling (credentials undecryptable after move), no backup verification/restore test, no rollback plan, workflows not deactivated / container not stopped before export. With the skill: one announced Fable consult (plan review / pre-completion trigger) before finalizing.",
-      "files": ["evals/fixtures/eval-2/PLAN.md"]
+      "files": ["evals/fixtures/eval-2/PLAN.md"],
+      "assertions": [
+        "FINAL_PLAN.md exists",
+        "Fixes flaw 1: handles N8N_ENCRYPTION_KEY migration",
+        "Fixes flaw 2: verifies the backup/export before cutover",
+        "Fixes flaw 3: explicit rollback path to SQLite",
+        "Fixes flaw 4: stops container / deactivates workflows before export",
+        "harness_report.json exists and is valid JSON",
+        "[with_skill only] Exactly one Fable consult that executed, briefing under 1200 words",
+        "[with_skill only] Final message announces the consult and relays the verdict",
+        "[without_skill only] No Agent call with model 'fable'"
+      ]
     }
   ]
 }
