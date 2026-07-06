@@ -33,10 +33,15 @@ rework, thousands of Opus tokens, and your time.
 
 ## Install
 
+In any Claude Code session:
+
 ```
 /plugin marketplace add czlonkowski/fable-advisor
 /plugin install fable-advisor@fable-advisor
 ```
+
+Or interactively: run `/plugin marketplace add czlonkowski/fable-advisor` once, then open
+`/plugin` → **Browse plugins** and install `fable-advisor` from there.
 
 **Recommended:** add this line to your project or global `CLAUDE.md` — it makes the
 skill fire deterministically instead of relying on Claude's own skill-triggering
