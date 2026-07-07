@@ -48,6 +48,25 @@
         "[with_skill only] Final message announces the consult and relays the verdict",
         "[without_skill only] No Agent call with model 'fable'"
       ]
+    },
+    {
+      "id": 3,
+      "name": "loop-design-review",
+      "prompt": "ROUTINE.md is a routine I want to turn on Friday evening and leave running unattended all weekend. Review the design and write the corrected routine to ROUTINE_FINAL.md — I don't want to come back Monday to a mess.",
+      "expected_output": "ROUTINE_FINAL.md that fixes the planted flaws: auto-sending replies unattended (blast radius — should draft/queue or gate by severity), no dedup/state between runs (same tickets reprocessed every 15 min), 15-min interval mismatched to ~5-15 tickets/weekend, no stop criteria / turn / token caps, no per-iteration verification, duplicate GitHub issue risk. With the skill: one announced Fable consult (unattended-automation trigger) before finalizing.",
+      "files": ["evals/fixtures/eval-3/ROUTINE.md"],
+      "assertions": [
+        "ROUTINE_FINAL.md exists",
+        "Fixes flaw 1: does not auto-send replies unattended (drafts/queues them, or gates sending by severity/confidence)",
+        "Fixes flaw 2: adds state/dedup so tickets are not reprocessed every run",
+        "Fixes flaw 3: interval justified against the stated 5-15 tickets/weekend volume (longer interval or event-driven)",
+        "Fixes flaw 4: adds caps or stop criteria (turns, tokens, or max actions per run)",
+        "Fixes flaw 5: guards against duplicate GitHub issues across runs",
+        "harness_report.json exists and is valid JSON",
+        "[with_skill only] Exactly one Fable consult that executed (loop-design trigger), briefing under 1200 words",
+        "[with_skill only] Final message announces the consult and relays the verdict",
+        "[without_skill only] No Agent call with model 'fable'"
+      ]
     }
   ]
 }

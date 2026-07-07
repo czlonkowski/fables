@@ -49,8 +49,9 @@ judgment (see [Making it fire reliably](#making-it-fire-reliably) for why):
 
 ```
 Before committing to any costly-to-revert decision (architecture, DB schema, API/webhook
-contracts, technology selection, production migration plans), or when stuck after 2+
-failed fix attempts, consult the fable-advisor skill first.
+contracts, technology selection, production migration plans), before starting any
+unattended loop/schedule/routine, or when stuck after 2+ failed fix attempts, consult
+the fable-advisor skill first.
 ```
 
 Requirements: Claude Code with Fable 5 available as a subagent model. Designed for
@@ -71,8 +72,9 @@ If you want deterministic triggering, add one line to your project or global `CL
 
 ```
 Before committing to any costly-to-revert decision (architecture, DB schema, API/webhook
-contracts, technology selection, production migration plans), or when stuck after 2+
-failed fix attempts, consult the fable-advisor skill first.
+contracts, technology selection, production migration plans), before starting any
+unattended loop/schedule/routine, or when stuck after 2+ failed fix attempts, consult
+the fable-advisor skill first.
 ```
 
 Naming it also works: prompts that mention Fable, a "second opinion", or "check with a
@@ -86,13 +88,19 @@ stronger model" trigger far more reliably (see Prompts to try below).
 
 If either is "no", the orchestrator decides on its own.
 
-**The four triggers:**
+**The five triggers:**
 1. **Costly-to-revert decision, before building** — architecture, DB schema, API/webhook
    contracts, n8n workflow topology, technology selection
 2. **Stuck escalation** — 2+ genuinely different failed attempts, evidence in hand
 3. **Plan review** — a draft implementation plan embedding a costly-to-revert choice
 4. **Pre-completion review** — before declaring done on production deploys, migrations,
    client-facing deliverables
+5. **Unattended-automation design** — before starting a loop, schedule, or routine
+   (`/loop`, `/schedule`, `/goal`, cron-style agents) that runs without a human
+   watching. A loop multiplies its design flaws — a bad stop condition or interval
+   fails on *every* iteration — so Fable reviews stop conditions, interval-to-change-rate
+   match, per-iteration verification, blast radius, and cost per iteration, once,
+   before it runs. (Read-only, easily-cancelled polling doesn't need this.)
 
 **The budget (hard rules):**
 - Default **one** consult per task, hard cap **three** Fable interactions
@@ -129,6 +137,10 @@ I'm torn between Postgres LISTEN/NOTIFY and a proper queue for job dispatch. dec
 
 ```
 review my deploy plan for Saturday's production migration and fix anything risky before I run it
+```
+
+```
+I'm about to turn this on for the weekend: /schedule every 15 min, triage new support tickets and reply automatically. get a Fable review of the loop design first — stop conditions, interval, what could go wrong unattended
 ```
 
 The skill can also trigger without Fable being named when a task hits a costly-to-revert

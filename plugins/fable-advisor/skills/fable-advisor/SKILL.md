@@ -1,6 +1,6 @@
 ---
 name: fable-advisor
-description: Decision protocol for consulting Claude Fable 5 (the top-tier, usage-billed model) as a strategic advisor from an Opus orchestrator session. Use BEFORE committing to any decision that would be costly to revert — system or workflow architecture, database schema and data-model design, API/webhook contracts, n8n workflow topology, technology and vendor selection, production migrations — even when you could decide yourself; deciding solo on a one-way door is exactly the failure mode this skill prevents. Fires on phrasings like "make the call", "decide between X and Y", "we'll live with this choice", "one-way door", "before we freeze it", "has to be right". Also use when stuck after 2+ genuinely different failed fix attempts, when finalizing an implementation plan (including in plan mode, before ExitPlanMode), before declaring done on hard-to-revert work (production deploys, migrations, client-facing deliverables), and whenever the user mentions Fable, a second opinion, an advisor, or checking with a stronger model. Covers when a consult is worth 2× Opus token prices, the compact briefing packet, per-task budget caps, and how to weigh the advice.
+description: Decision protocol for consulting Claude Fable 5 (the top-tier, usage-billed model) as a strategic advisor from an Opus orchestrator session. Use BEFORE committing to any decision that would be costly to revert — system or workflow architecture, database schema and data-model design, API/webhook contracts, n8n workflow topology, technology and vendor selection, production migrations — even when you could decide yourself; deciding solo on a one-way door is exactly the failure mode this skill prevents. Fires on phrasings like "make the call", "decide between X and Y", "we'll live with this choice", "one-way door", "before we freeze it", "has to be right". Also use BEFORE starting any unattended loop, schedule, or routine — /loop, /schedule, /goal with a high turn cap, cron-style agents, proactive workflows — because a loop design flaw repeats every iteration; Fable reviews stop conditions, interval, verification, blast radius, and cost per iteration once, before it runs. Also use when stuck after 2+ genuinely different failed fix attempts, when finalizing an implementation plan (including in plan mode, before ExitPlanMode), before declaring done on hard-to-revert work (production deploys, migrations, client-facing deliverables), and whenever the user mentions Fable, a second opinion, an advisor, or checking with a stronger model. Covers when a consult is worth 2× Opus token prices, the compact briefing packet, per-task budget caps, and how to weigh the advice.
 ---
 
 # Fable Advisor — the expensive-consultant protocol
@@ -26,7 +26,7 @@ and test. Never hand Fable generation work.
 
 If either answer is "no", do not consult.
 
-## The four triggers
+## The five triggers
 
 Consult Fable when one of these fires — and orient first (read the key files, gather the
 constraints) so the briefing contains evidence. A consult without evidence buys generic
@@ -45,6 +45,18 @@ advice at premium prices.
 4. **Pre-completion review.** Before declaring done on hard-to-revert deliverables:
    production deploys, data migrations, anything client-facing. Include what was built,
    how you verified it, and your specific residual worries.
+5. **Unattended-automation design.** Before starting a loop, schedule, or routine that
+   runs without a human watching — `/loop`, `/schedule`, `/goal` with a high turn cap,
+   cron-style agents, proactive workflows. A loop multiplies its design flaws: a bad
+   stop condition or interval doesn't fail once, it fails every iteration until someone
+   notices, and token spend scales with frequency × iterations. One review before it
+   starts is the cheapest point of intervention. Have Fable check: stop conditions
+   (deterministic and reachable?), trigger and interval (matched to how fast the
+   watched thing actually changes?), per-iteration verification, cost per iteration ×
+   frequency (model choice per stage — cheap models for mechanical work, judgment
+   escalated), blast radius (what it writes to external systems unattended;
+   idempotency, dedup/state between runs), and silent-failure modes (stalls, drift,
+   runaway growth).
 
 ## When NOT to consult
 
@@ -54,6 +66,9 @@ advice at premium prices.
 - Generation of any kind: code, documents, configs, workflows. If you're tempted to ask
   Fable to "write" something, that's your job.
 - A first failed attempt. Try a genuinely different approach before escalating.
+- A low-stakes, easily-cancelled loop: read-only polling ("check deploy status every
+  5 min") needs no review — cancelling a loop is free. Consult only when the routine
+  acts on external systems unattended, or cost per iteration × frequency is material.
 - To offload thinking you haven't done yet. Fable amplifies a well-framed question and
   wastes money on a vague one.
 
@@ -139,7 +154,10 @@ Under 300 words.
 
 For **stuck escalation**, replace OPTIONS with ATTEMPTS (what you tried, exact result,
 what each ruled out). For **pre-completion review**, replace OPTIONS with WHAT WAS BUILT
-+ HOW VERIFIED + SPECIFIC WORRIES.
++ HOW VERIFIED + SPECIFIC WORRIES. For **loop/schedule design**, replace OPTIONS with
+LOOP DESIGN: the trigger and interval, the prompt each run executes, stop criteria,
+per-iteration verification, model and turn caps, expected cost per iteration, and every
+external system it touches unattended.
 
 Always state the decision in the first line and always request the answer format —
 output is the consult's biggest cost driver, and Anthropic's testing showed capping
