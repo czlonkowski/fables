@@ -274,11 +274,35 @@ research current pricing and rate limits for the top 5 managed vector DB provide
 sweep the monorepo and inventory every call to the OpenAI API with file:line, model used, and whether it goes through our retry wrapper
 ```
 
-### Evals
+### Triggering — read this before relying on it
 
-Not yet — v0.1.0 ships the protocol and the worker agent; eval scenarios (a
-coverage-shaped task that should fan out, a narrow task that shouldn't) are planned.
-The measured numbers quoted above are the cookbook's, on its web-research workload.
+We ran the same 20-query trigger benchmark that shaped `fable-advisor` (10 realistic
+bulk-reading tasks that *should* fire, 10 tricky near-misses that shouldn't), 3 probes
+each across 5 description variants. Fable wasn't available as the CLI model at test
+time, so this ran on **Opus 4.8 as a proxy** — read the numbers as indicative, not as
+true Fable behavior.
+
+- **Zero false-fires (precision 100%) on every variant.** The skill stayed quiet on all
+  ten near-misses — single-file reads, "explain the pattern" questions, a
+  second-opinion prompt that belongs to `fable-advisor`, and pure generation tasks.
+- **Recall was near-zero regardless of wording.** Opus rarely *consulted* the skill on
+  genuine bulk-reading tasks, and none of four rewrites moved the needle — the original
+  description was kept as best. This is the same structural effect measured for
+  `fable-advisor`, and it's stronger here: Claude Code consults a skill only for work
+  it can't easily do alone, and "read a pile of files myself" is exactly the work a
+  capable model is confident it *can* do. That confidence is the failure mode this
+  skill counters — and a stronger model (the real Fable target) tends to under-consult
+  *more*, not less.
+
+**So don't rely on unnamed triggering — use the `CLAUDE.md` line above.** It's the
+deterministic mechanism; the description's job is mainly to not false-fire, which it
+does well. Naming the skill, or flagging cost / "fan out" / "at Fable prices" in the
+prompt, also helps.
+
+Full eval scenarios (a coverage-shaped task graded on worker fan-out and rate split, a
+narrow task graded on zero overhead) are still planned. The ~2.5×/3×/84–98% figures
+above remain the cookbook's, on its web-research workload — not yet re-measured in
+Claude Code.
 
 ---
 
