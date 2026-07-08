@@ -1,20 +1,23 @@
-# fable-advisor
+# fables
 
-**Two Claude Code plugins for one problem: Fable 5 is the best model and the most
+**Two Claude Code plugins for one problem: Claude Fable 5 is the best model and the most
 expensive one.**
+
+Each plugin is a small fable about using Fable 5 well, and both share a moral —
+*judgment belongs on the strongest model, tokens belong on the cheapest one that can do
+the leg.* Same economics, opposite directions:
 
 | Plugin | Direction | For sessions running on | One line |
 |---|---|---|---|
 | [**fable-advisor**](#fable-advisor-consult-up) | consult **up** | Opus (or any model below Fable) | Buy Fable judgment rarely, at costly-to-revert inflection points, with a compact brief |
 | [**fable-orchestrator**](#fable-orchestrator-delegate-down) | delegate **down** | Fable 5 (or any premium model) | Plan big, execute small: push bulk reading to cheap parallel workers, keep only distilled findings at Fable rates |
 
-Same economics, opposite directions: judgment belongs on the strongest model, tokens
-belong on the cheapest one that can do the leg. Install one or both:
+Install one or both:
 
 ```
-/plugin marketplace add czlonkowski/fable-advisor
-/plugin install fable-advisor@fable-advisor
-/plugin install fable-orchestrator@fable-advisor
+/plugin marketplace add czlonkowski/fables
+/plugin install fable-advisor@fables
+/plugin install fable-orchestrator@fables
 ```
 
 ---

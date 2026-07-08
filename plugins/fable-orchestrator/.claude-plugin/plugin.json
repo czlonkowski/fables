@@ -7,8 +7,8 @@
     "email": "romuald@aiadvisors.pl",
     "url": "https://aiadvisors.pl/en"
   },
-  "homepage": "https://github.com/czlonkowski/fable-advisor",
-  "repository": "https://github.com/czlonkowski/fable-advisor",
+  "homepage": "https://github.com/czlonkowski/fables",
+  "repository": "https://github.com/czlonkowski/fables",
   "license": "MIT",
   "keywords": ["fable", "orchestrator", "coordinator", "delegation", "cost-control", "subagents", "fan-out", "plan-big-execute-small"]
 }
