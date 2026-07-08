@@ -6,14 +6,19 @@
     "url": "https://aiadvisors.pl/en"
   },
   "metadata": {
-    "description": "Spend Fable 5 tokens only where they change the outcome — an expensive-advisor protocol for Opus orchestrators in Claude Code.",
-    "version": "0.3.0"
+    "description": "Two protocols for Fable 5 economics in Claude Code: consult up (fable-advisor — an Opus orchestrator buys Fable judgment at inflection points) and delegate down (fable-orchestrator — a Fable session pushes bulk reading to cheap parallel workers).",
+    "version": "0.4.0"
   },
   "plugins": [
     {
       "name": "fable-advisor",
       "source": "./plugins/fable-advisor",
       "description": "Consult Claude Fable 5 as a strategic advisor at costly-to-revert inflection points: architecture decisions, stuck debugging, plan review, pre-completion review, and unattended loop/schedule design. Compact briefing packets, hard budget caps, terse verdicts — judgment from Fable, tokens from Opus."
+    },
+    {
+      "name": "fable-orchestrator",
+      "source": "./plugins/fable-orchestrator",
+      "description": "Run Fable 5 as a coordinator: plan big, execute small. Bulk reading — codebase sweeps, log triage, document review, web research, coverage verification — fans out to parallel workers pinned to Sonnet/Haiku, and only distilled findings enter Fable's premium context. Ported to Claude Code from Anthropic's plan-big-execute-small cookbook."
     }
   ]
 }

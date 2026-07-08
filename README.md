@@ -1,15 +1,34 @@
 # fable-advisor
 
+**Two Claude Code plugins for one problem: Fable 5 is the best model and the most
+expensive one.**
+
+| Plugin | Direction | For sessions running on | One line |
+|---|---|---|---|
+| [**fable-advisor**](#fable-advisor-consult-up) | consult **up** | Opus (or any model below Fable) | Buy Fable judgment rarely, at costly-to-revert inflection points, with a compact brief |
+| [**fable-orchestrator**](#fable-orchestrator-delegate-down) | delegate **down** | Fable 5 (or any premium model) | Plan big, execute small: push bulk reading to cheap parallel workers, keep only distilled findings at Fable rates |
+
+Same economics, opposite directions: judgment belongs on the strongest model, tokens
+belong on the cheapest one that can do the leg. Install one or both:
+
+```
+/plugin marketplace add czlonkowski/fable-advisor
+/plugin install fable-advisor@fable-advisor
+/plugin install fable-orchestrator@fable-advisor
+```
+
+---
+
+## fable-advisor (consult up)
+
 **Spend Fable 5 tokens only where they change the outcome.**
 
-A Claude Code plugin that teaches an Opus orchestrator to consult **Claude Fable 5** —
-Anthropic's most capable (and most expensive) model — the way you'd use a top-dollar
-consultant: rarely, at the right moment, with a well-prepared brief, for a terse verdict.
+Teaches an Opus orchestrator to consult **Claude Fable 5** the way you'd use a
+top-dollar consultant: rarely, at the right moment, with a well-prepared brief, for a
+terse verdict. Day-to-day work runs on Opus. Fable gets called at **inflection
+points**: the decisions that are costly to revert once you start building.
 
-Day-to-day work runs on Opus. Fable gets called at **inflection points**: the decisions
-that are costly to revert once you start building. Everything else stays at Opus rates.
-
-## Why
+### Why
 
 Fable 5 is billed at **$10 / $50 per MTok — exactly 2× Opus 4.8** ($5 / $25). Left
 undisciplined, an orchestrator either never uses it (leaving quality on the table) or
@@ -24,24 +43,12 @@ token savings live.
 A disciplined consult costs roughly **$0.15–0.50**. A wrong architecture costs hours of
 rework, thousands of Opus tokens, and your time.
 
-## What's inside
+### What's inside
 
 | Component | What it does |
 |---|---|
 | **Skill** `fable-advisor` | The decision protocol: when to consult (and when not to), hard budget caps, the briefing-packet format, how to weigh the advice |
 | **Agent** `fable-advisor` | A read-only subagent pinned to `model: fable` with a system prompt that enforces terse, committed verdicts (Verdict → Why → Risks → Would change my mind, ≤300 words) |
-
-## Install
-
-In any Claude Code session:
-
-```
-/plugin marketplace add czlonkowski/fable-advisor
-/plugin install fable-advisor@fable-advisor
-```
-
-Or interactively: run `/plugin marketplace add czlonkowski/fable-advisor` once, then open
-`/plugin` → **Browse plugins** and install `fable-advisor` from there.
 
 **Recommended:** add this line to your project or global `CLAUDE.md` — it makes the
 skill fire deterministically instead of relying on Claude's own skill-triggering
@@ -57,7 +64,7 @@ the fable-advisor skill first.
 Requirements: Claude Code with Fable 5 available as a subagent model. Designed for
 sessions where the base model is Opus (works from any orchestrator model below Fable).
 
-## Making it fire reliably
+### Making it fire reliably
 
 We benchmarked the skill's triggering on 20 realistic queries (10 should-fire, 10 tricky
 near-miss negatives) across four description variants, ~200 runs on Opus. Result: **zero
@@ -68,19 +75,11 @@ consults skills only for tasks it can't handle alone, and Opus believes (correct
 narrow sense) that it can answer a design question itself. That belief is the exact
 failure mode this skill exists to counter.
 
-If you want deterministic triggering, add one line to your project or global `CLAUDE.md`:
+If you want deterministic triggering, use the one-line `CLAUDE.md` setup above. Naming
+it also works: prompts that mention Fable, a "second opinion", or "check with a stronger
+model" trigger far more reliably (see Prompts to try below).
 
-```
-Before committing to any costly-to-revert decision (architecture, DB schema, API/webhook
-contracts, technology selection, production migration plans), before starting any
-unattended loop/schedule/routine, or when stuck after 2+ failed fix attempts, consult
-the fable-advisor skill first.
-```
-
-Naming it also works: prompts that mention Fable, a "second opinion", or "check with a
-stronger model" trigger far more reliably (see Prompts to try below).
-
-## How it works
+### How it works
 
 **The gate — two questions before every consult:**
 1. Is this decision costly to revert, or am I genuinely stuck?
@@ -113,7 +112,7 @@ constraints, curated evidence, ≤5 file pointers the advisor may read narrowly 
 explicit answer-format request, because advisor output is the biggest cost driver
 (Anthropic measured ~7× output reduction from capping, with no quality loss).
 
-## What a consult looks like
+### What a consult looks like
 
 ```
 Consulting Fable on sync architecture (trigger: costly-to-revert, consult 1/3).
@@ -123,7 +122,7 @@ Consulting Fable on sync architecture (trigger: costly-to-revert, consult 1/3).
   freshness requirements drop below 4 hours.
 ```
 
-## Prompts to try
+### Prompts to try
 
 In the style of the [Claude Code prompt library](https://code.claude.com/docs/en/prompt-library):
 
@@ -146,9 +145,9 @@ I'm about to turn this on for the weekend: /schedule every 15 min, triage new su
 The skill can also trigger without Fable being named when a task hits a costly-to-revert
 decision, a stuck debugging loop, or a pre-production review — but unnamed triggering is
 ~50–60% reliable in our benchmark. For deterministic behavior, use the one-line
-`CLAUDE.md` setup from the Install section.
+`CLAUDE.md` setup from What's inside.
 
-## Evals
+### Evals
 
 The repo ships the eval scenarios used to develop the skill (`evals/`): an
 architecture-decision task (should consult once), a trivial-change task (should not
@@ -170,6 +169,118 @@ briefing compactness, and outcome quality.
   verification).
 - Trigger benchmark: ~200 runs across 4 description variants — **zero false-fires**,
   which is why the budget rules can afford to be generous about consulting.
+
+---
+
+## fable-orchestrator (delegate down)
+
+**Plan big, execute small.**
+
+Teaches a session running **on Fable 5** to work like the coordinator in
+[Anthropic's plan-big-execute-small cookbook](https://github.com/anthropics/claude-cookbooks/blob/main/managed_agents/CMA_plan_big_execute_small.ipynb):
+Fable plans, decomposes, and synthesizes — but never pulls bulk material into its own
+context. Cheap parallel workers (Sonnet/Haiku) do the token-heavy reading in their own
+context windows and report back distilled findings.
+
+### Why
+
+Most substantial tasks are two jobs in one: a little judgment and a lot of mechanical
+reading. On a Fable session both bill at **$10/$50 per MTok** — 5× Sonnet 5, 10× Haiku
+4.5 — unless the reading is moved.
+
+And there's a trap that makes naive delegation useless: **subagents inherit the session
+model.** On a Fable session, an un-pinned `Explore` or `general-purpose` spawn runs on
+Fable too — same reading, same premium rate, plus spawn overhead. The rate split only
+exists when workers are explicitly pinned to a cheap model, which is the one mechanical
+habit this skill enforces.
+
+The cookbook measured the split honestly against a rigor-matched solo frontier agent:
+roughly **2.5× cheaper and 3× faster**, with **84–98% of input tokens billed at worker
+rates**. (Their numbers, on web research; we haven't re-measured in Claude Code yet.)
+
+### What's inside
+
+| Component | What it does |
+|---|---|
+| **Skill** `fable-orchestrator` | The delegation protocol: the delegate-or-read gate, five workload shapes, the worker brief format, model-tier choice, brief granularity, premise verification, and when NOT to split |
+| **Agent** `worker` | A read-only reader (`Read, Grep, Glob, WebFetch, WebSearch`) pinned to `model: sonnet` (override to `haiku` per-spawn) whose system prompt enforces the distilled-report contract: findings with evidence pointers, never raw dumps |
+
+**Recommended:** for deterministic firing, add this line to your project or global
+`CLAUDE.md` (same reasoning as the advisor's — Claude under-consults skills for work it
+believes it can do itself, and "just read everything myself" is exactly such work):
+
+```
+When this session runs on Fable 5 or another premium model and a task requires bulk
+reading — sweeping code, triaging logs, reviewing documents, researching the web —
+consult the fable-orchestrator skill before reading the material yourself.
+```
+
+Requirements: Claude Code with Sonnet/Haiku available as subagent models. Designed for
+sessions where the base model is Fable 5; the protocol applies from any premium
+orchestrator.
+
+### How it works
+
+**The gate — two questions before any bulk read:**
+1. Is the reading mandatory and voluminous (more than a handful of files or pages)?
+2. Can a cheap model extract what's needed, or does the judgment live in the raw
+   material itself?
+
+Mandatory + voluminous + extractable → fan out. Anything else → Fable reads it itself.
+
+**The five workload shapes:** codebase sweep · log triage · document review · web
+research · coverage verification (N facts × M sources — the shape the cookbook
+measured).
+
+**The worker brief:** `SUB-QUESTION` (one line) / `SCOPE` (exact paths, globs, URLs) /
+`REPORT` (shape + length cap — worker output is what enters premium context) / `DON'T`
+(out of scope, rabbit holes). Independent briefs go out in one message, in parallel.
+Fewer, bigger briefs: each spawn has a floor cost, and the cookbook found
+over-splitting *raised* the bill.
+
+**The discipline:**
+- `haiku` for mechanical sweeps, `sonnet` for reading judgment, never Fable for workers
+- Decisions, plans, and synthesis never delegated down — workers report facts
+- One premise-verification worker when the fan-out rests on an assumed list (the
+  cookbook's own run verified 20 facts perfectly against a park list that was wrong)
+- Failed worker → re-assign the brief once; don't quietly read it yourself at 5× the rate
+- Reports are trusted: no re-reading what a worker read, spot-checks only narrow and
+  only for load-bearing surprises
+- The final message tells the user the shape of the run: how many workers, which
+  models, what stayed at Fable rates
+
+### What a fan-out looks like
+
+```
+Fan-out: 6 workers (4 haiku, 2 sonnet) read ~90 files; only their reports entered
+Fable context. Premise check included (service list verified against docker-compose).
+```
+
+### Prompts to try
+
+```
+audit all ~80 workflows on the n8n instance for hardcoded credentials and http:// endpoints — keep the token bill sane
+```
+
+```
+go through last week of logs in /var/log/hermes and figure out why memory climbs every night around 02:00
+```
+
+```
+research current pricing and rate limits for the top 5 managed vector DB providers, verified against official docs (not blog posts), and recommend one for our scale
+```
+
+```
+sweep the monorepo and inventory every call to the OpenAI API with file:line, model used, and whether it goes through our retry wrapper
+```
+
+### Evals
+
+Not yet — v0.1.0 ships the protocol and the worker agent; eval scenarios (a
+coverage-shaped task that should fan out, a narrow task that shouldn't) are planned.
+The measured numbers quoted above are the cookbook's, on its web-research workload.
+
+---
 
 ## Author
 

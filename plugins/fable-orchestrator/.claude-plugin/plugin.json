@@ -1,0 +1,14 @@
+{
+  "name": "fable-orchestrator",
+  "description": "Run Fable 5 as a coordinator: plan big, execute small. Bulk reading — codebase sweeps, log triage, document review, web research, coverage verification — fans out to parallel workers pinned to Sonnet/Haiku, and only distilled findings enter Fable's premium context. Ported to Claude Code from Anthropic's plan-big-execute-small cookbook.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Romuald Członkowski",
+    "email": "romuald@aiadvisors.pl",
+    "url": "https://aiadvisors.pl/en"
+  },
+  "homepage": "https://github.com/czlonkowski/fable-advisor",
+  "repository": "https://github.com/czlonkowski/fable-advisor",
+  "license": "MIT",
+  "keywords": ["fable", "orchestrator", "coordinator", "delegation", "cost-control", "subagents", "fan-out", "plan-big-execute-small"]
+}
