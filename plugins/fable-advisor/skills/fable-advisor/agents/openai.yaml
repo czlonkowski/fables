@@ -1,0 +1,4 @@
+interface:
+  display_name: "Fable Advisor"
+  short_description: "Consult Claude Fable from Codex through Claude CLI."
+  default_prompt: "Use $fable-advisor to review this decision before implementation."

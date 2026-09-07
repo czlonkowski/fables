@@ -8,7 +8,7 @@ the leg.* Same economics, opposite directions:
 
 | Plugin | Direction | For sessions running on | One line |
 |---|---|---|---|
-| [**fable-advisor**](#fable-advisor-consult-up) | consult **up** | Opus (or any model below Fable) | Buy Fable judgment rarely, at costly-to-revert inflection points, with a compact brief |
+| [**fable-advisor**](#fable-advisor-consult-up) | consult **up** | Codex or Claude Code | Buy a compact Fable verdict via Claude CLI or a native Claude agent |
 | [**fable-orchestrator**](#fable-orchestrator-delegate-down) | delegate **down** | Fable 5 (or any premium model) | Plan big, execute small: push bulk reading to cheap parallel workers, keep only distilled findings at Fable rates |
 | [**astra-advisor**](#astra-advisor-and-astra-orchestrator) | consult **up** | Codex, or Claude Code with Codex CLI | Buy a compact GPT-6 Astra verdict through the host-appropriate route |
 | [**astra-orchestrator**](#astra-advisor-and-astra-orchestrator) | delegate **down** | GPT-6 Astra in Codex | Use native Luna/Terra/Sol readers; keep decisions and synthesis on Astra |
@@ -108,38 +108,63 @@ specifications, not measured GPT behavioral results.
 
 ## fable-advisor (consult up)
 
-**Spend Fable 5 tokens only where they change the outcome.**
+**Use Fable judgment at decisions that are costly to reverse.**
 
-Teaches an Opus orchestrator to consult **Claude Fable 5** the way you'd use a
-top-dollar consultant: rarely, at the right moment, with a well-prepared brief, for a
-terse verdict. Day-to-day work runs on Opus. Fable gets called at **inflection
-points**: the decisions that are costly to revert once you start building.
+The parent can run in Codex or Claude Code. It gathers the evidence, implements,
+and verifies; Fable returns a compact verdict. Both consultation routes use
+`xhigh` effort by default, with explicit user overrides respected.
+
+| Parent host | Invocation | Model / effort |
+|---|---|---|
+| Codex | `claude -p` with a compact briefing on stdin | `claude-fable-5-1`, `--effort xhigh` |
+| Claude Code | Native `fable-advisor` agent | `model: fable`, `effort: xhigh` |
 
 ### Why
 
-Fable 5 is billed at **$10 / $50 per MTok — exactly 2× Opus 4.8** ($5 / $25). Left
-undisciplined, an orchestrator either never uses it (leaving quality on the table) or
-uses it lazily — full-context dumps, chatty back-and-forth, delegating generation —
-which burns money for nothing.
+A short independent review can prevent substantial rework. Keep evidence focused,
+cap interactions, and leave implementation with the parent. The original pattern
+was adapted from [Anthropic's advisor tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/advisor-tool).
+Actual cost depends on the selected model, reasoning, runtime context, and account
+billing; the older Opus/Fable benchmarks below are historical Claude Code results,
+not Codex measurements or a promise of current per-consult pricing.
 
-The protocol is adapted from [Anthropic's advisor tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/advisor-tool)
-(executor + advisor pattern), rebuilt for local Claude Code orchestration where the
-advisor is a subagent and sees **only what you send it** — which is exactly where the
-token savings live.
+### Use from Codex
 
-A disciplined consult costs roughly **$0.15–0.50**. A wrong architecture costs hours of
-rework, thousands of Opus tokens, and your time.
+The repository exposes `.agents/skills/fable-advisor` as a relative symlink to the
+packaged skill. Open Codex in `fable-advisor/` and ask:
+
+```text
+Use $fable-advisor for a second opinion on this architecture before implementation.
+```
+
+For use in other projects, install the complete skill folder from
+`czlonkowski/fables`, path `plugins/fable-advisor/skills/fable-advisor`, using Codex's
+Skill Installer, or copy it into that project's `.agents/skills/fable-advisor/`.
+It includes its CLI reference and does not require the Claude plugin to be installed.
+
+The [CLI route](plugins/fable-advisor/skills/fable-advisor/references/codex-cli.md)
+uses `claude -p --model claude-fable-5-1 --effort xhigh`, tools disabled, safe mode,
+JSON output, and no persisted session. It bounds turns, spend, and runtime, verifies
+success and model metadata, and uses a fresh invocation for a justified follow-up.
+Codex supplies source excerpts because the default advisor cannot open files.
+
+Checked against [Claude's programmatic-use documentation](https://code.claude.com/docs/en/headless),
+[CLI reference](https://code.claude.com/docs/en/cli-reference), and
+[model configuration](https://code.claude.com/docs/en/model-config) on 2026-09-07.
+`--safe-mode` preserves the normal login; `--bare` skips subscription OAuth/keychain
+access. The native agent's `effort` field follows the
+[sub-agent documentation](https://code.claude.com/docs/en/sub-agents).
 
 ### What's inside
 
 | Component | What it does |
 |---|---|
 | **Skill** `fable-advisor` | The decision protocol: when to consult (and when not to), hard budget caps, the briefing-packet format, how to weigh the advice |
-| **Agent** `fable-advisor` | A read-only subagent pinned to `model: fable` with a system prompt that enforces terse, committed verdicts (Verdict → Why → Risks → Would change my mind, ≤300 words) |
+| **Agent** `fable-advisor` | A Claude Code read-only subagent with `model: fable` and `effort: xhigh`, plus a system prompt that enforces terse, committed verdicts (Verdict → Why → Risks → Would change my mind, ≤300 words) |
 
-**Recommended:** add this line to your project or global `CLAUDE.md` — it makes the
-skill fire deterministically instead of relying on Claude's own skill-triggering
-judgment (see [Making it fire reliably](#making-it-fire-reliably) for why):
+**Recommended:** add this line to `AGENTS.md` for Codex or `CLAUDE.md` for Claude
+Code to make the consultation rule explicit (the trigger benchmarks below cover
+Claude Code only):
 
 ```
 Before committing to any costly-to-revert decision (architecture, DB schema, API/webhook
@@ -148,8 +173,9 @@ unattended loop/schedule/routine, or when stuck after 2+ failed fix attempts, co
 the fable-advisor skill first.
 ```
 
-Requirements: Claude Code with Fable 5 available as a subagent model. Designed for
-sessions where the base model is Opus (works from any orchestrator model below Fable).
+Requirements: authenticated Claude Code with the selected Fable model available.
+The tested Codex CLI route uses Claude Code 2.1.263; Fable 5.1 requires 2.1.255+.
+The native agent stays inside Claude Code; Codex invokes the CLI process instead.
 
 ### Making it fire reliably
 

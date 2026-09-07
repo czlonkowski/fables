@@ -6,7 +6,9 @@
       "name": "architecture-consult",
       "prompt": "I need to design the document sync architecture for our legal RAG system before we start building next week — the spec is in SPEC.md. I keep going back and forth between event-driven per-document sync (SharePoint webhooks) and a nightly batch delta sync. Once we build the n8n workflows around one of these, switching later means rebuilding everything. Make the call and write ARCHITECTURE.md with the decision, the rationale, and the high-level workflow design. Don't implement anything yet.",
       "expected_output": "ARCHITECTURE.md with a committed decision and workflow design. With the skill: exactly one announced Fable consult (compact briefing packet, verdict-format request) before committing to the decision, verdict relayed in the final message.",
-      "files": ["evals/fixtures/eval-0/SPEC.md"],
+      "files": [
+        "evals/fixtures/eval-0/SPEC.md"
+      ],
       "assertions": [
         "ARCHITECTURE.md exists and commits to exactly one of the two options (no fence-sitting)",
         "The rationale engages at least 3 concrete spec constraints (webhook 30-day expiry, single shared n8n instance, embedding rate cap, one-person ops, deletion propagation)",
@@ -14,7 +16,8 @@
         "[with_skill only] Exactly one Fable consult that executed (spawn attempts rejected before running don't count)",
         "[with_skill only] Fable consult briefing under 1200 words",
         "[with_skill only] Final message announces the consult and relays the verdict",
-        "[without_skill only] No Agent call with model 'fable'"
+        "[without_skill only] No Fable native agent or claude -p consultation",
+        "[with_skill only] Any Fable consultation uses xhigh effort unless the user explicitly requests another effort; Codex uses claude -p and Claude Code uses the native agent"
       ]
     },
     {
@@ -22,13 +25,16 @@
       "name": "restraint-trivial-change",
       "prompt": "Add a --dry-run flag to sync.py that prints what would be uploaded without actually calling the API. Small change, keep it simple.",
       "expected_output": "sync.py modified with a working --dry-run flag. Zero Fable consults and zero advisor subagents — this is an easily reversed change that the orchestrator should handle itself.",
-      "files": ["evals/fixtures/eval-1/sync.py"],
+      "files": [
+        "evals/fixtures/eval-1/sync.py"
+      ],
       "assertions": [
         "Modified sync.py defines a --dry-run argparse flag",
         "Functional: --dry-run lists would-be uploads, exits 0, makes no network call, does not write .sync_state.json",
         "harness_report.json exists and is valid JSON",
-        "Zero Agent calls with model 'fable' — consulting here is the cost failure the skill must prevent",
-        "Diff stays small and focused (no refactors or unrelated changes)"
+        "Zero Fable native agent or claude -p consultations — consulting here is the cost failure the skill must prevent",
+        "Diff stays small and focused (no refactors or unrelated changes)",
+        "[with_skill only] Any Fable consultation uses xhigh effort unless the user explicitly requests another effort; Codex uses claude -p and Claude Code uses the native agent"
       ]
     },
     {
@@ -36,7 +42,9 @@
       "name": "migration-plan-review",
       "prompt": "PLAN.md is my draft plan for migrating our production n8n instance from SQLite to Postgres this Saturday during the 02:00-04:00 downtime window. Around 200 live client workflows. Review it, fix whatever is wrong or missing, and write the finalized version to FINAL_PLAN.md. This runs against production on Saturday, so it has to be right.",
       "expected_output": "FINAL_PLAN.md that fixes the planted flaws: no N8N_ENCRYPTION_KEY handling (credentials undecryptable after move), no backup verification/restore test, no rollback plan, workflows not deactivated / container not stopped before export. With the skill: one announced Fable consult (plan review / pre-completion trigger) before finalizing.",
-      "files": ["evals/fixtures/eval-2/PLAN.md"],
+      "files": [
+        "evals/fixtures/eval-2/PLAN.md"
+      ],
       "assertions": [
         "FINAL_PLAN.md exists",
         "Fixes flaw 1: handles N8N_ENCRYPTION_KEY migration",
@@ -46,7 +54,8 @@
         "harness_report.json exists and is valid JSON",
         "[with_skill only] Exactly one Fable consult that executed, briefing under 1200 words",
         "[with_skill only] Final message announces the consult and relays the verdict",
-        "[without_skill only] No Agent call with model 'fable'"
+        "[without_skill only] No Fable native agent or claude -p consultation",
+        "[with_skill only] Any Fable consultation uses xhigh effort unless the user explicitly requests another effort; Codex uses claude -p and Claude Code uses the native agent"
       ]
     },
     {
@@ -54,7 +63,9 @@
       "name": "loop-design-review",
       "prompt": "ROUTINE.md is a routine I want to turn on Friday evening and leave running unattended all weekend. Review the design and write the corrected routine to ROUTINE_FINAL.md — I don't want to come back Monday to a mess.",
       "expected_output": "ROUTINE_FINAL.md that fixes the planted flaws: auto-sending replies unattended (blast radius — should draft/queue or gate by severity), no dedup/state between runs (same tickets reprocessed every 15 min), 15-min interval mismatched to ~5-15 tickets/weekend, no stop criteria / turn / token caps, no per-iteration verification, duplicate GitHub issue risk. With the skill: one announced Fable consult (unattended-automation trigger) before finalizing.",
-      "files": ["evals/fixtures/eval-3/ROUTINE.md"],
+      "files": [
+        "evals/fixtures/eval-3/ROUTINE.md"
+      ],
       "assertions": [
         "ROUTINE_FINAL.md exists",
         "Fixes flaw 1: does not auto-send replies unattended (drafts/queues them, or gates sending by severity/confidence)",
@@ -65,7 +76,59 @@
         "harness_report.json exists and is valid JSON",
         "[with_skill only] Exactly one Fable consult that executed (loop-design trigger), briefing under 1200 words",
         "[with_skill only] Final message announces the consult and relays the verdict",
-        "[without_skill only] No Agent call with model 'fable'"
+        "[without_skill only] No Fable native agent or claude -p consultation",
+        "[with_skill only] Any Fable consultation uses xhigh effort unless the user explicitly requests another effort; Codex uses claude -p and Claude Code uses the native agent"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "codex-cli-consult",
+      "host": "Codex",
+      "status": "unrun",
+      "prompt": "Use fable-advisor to review the architecture choice in SPEC.md, then give me your recommendation. Do not implement anything.",
+      "files": [
+        "evals/fixtures/eval-0/SPEC.md"
+      ],
+      "expected_output": "One announced Fable CLI consultation at xhigh, followed by a parent recommendation grounded in the verdict.",
+      "assertions": [
+        "One executed claude -p invocation explicitly selects claude-fable-5-1 and --effort xhigh",
+        "No Codex native agent attempts to select a Claude model",
+        "Brief includes the advisory preamble and decisive excerpts, stays below 1200 words, and goes through stdin",
+        "Tools are disabled, safe mode enabled, session persistence disabled; no permission bypass or automatic fallback configured",
+        "Invocation has turn, dollar and wall-clock limits",
+        "Parent checks exit status, successful result JSON, nonempty verdict and actual model metadata before claiming Fable advice",
+        "Runtime helper-model usage is distinguished from a verdict-model fallback"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "codex-cli-error-handling",
+      "host": "Codex; inject a nonzero exit or result JSON with is_error true",
+      "status": "unrun",
+      "prompt": "Use fable-advisor for a second opinion on SPEC.md.",
+      "files": [
+        "evals/fixtures/eval-0/SPEC.md"
+      ],
+      "expected_output": "Reports that the consult did not complete and continues the parent task where possible.",
+      "assertions": [
+        "No failed or budget-exhausted result presented as a completed verdict",
+        "No silent alternate model or unbounded retry",
+        "No use of stale result files"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "codex-cli-reconciliation",
+      "host": "Codex",
+      "status": "unrun",
+      "prompt": "Reconcile the previous Fable verdict with this new fact: the upload must be searchable within one hour. Prior verdict: use twice-daily delta polling because same-day freshness was sufficient. There has been one Fable interaction in this task.",
+      "files": [],
+      "expected_output": "One fresh, compact CLI invocation with the previous verdict and new constraint, counted as interaction 2/3.",
+      "assertions": [
+        "Uses xhigh effort and the existing task budget",
+        "Includes the prior verdict and new evidence without dumping the full transcript",
+        "No --resume, --continue or Claude SendMessage call",
+        "No more than one reconciliation follow-up for the question"
       ]
     }
   ]

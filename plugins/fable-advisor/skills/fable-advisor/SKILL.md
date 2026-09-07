@@ -1,15 +1,16 @@
 ---
 name: fable-advisor
-description: Decision protocol for consulting Claude Fable 5 (the top-tier, usage-billed model) as a strategic advisor from an Opus orchestrator session. Use BEFORE committing to any decision that would be costly to revert — system or workflow architecture, database schema and data-model design, API/webhook contracts, n8n workflow topology, technology and vendor selection, production migrations — even when you could decide yourself; deciding solo on a one-way door is exactly the failure mode this skill prevents. Fires on phrasings like "make the call", "decide between X and Y", "we'll live with this choice", "one-way door", "before we freeze it", "has to be right". Also use BEFORE starting any unattended loop, schedule, or routine — /loop, /schedule, /goal with a high turn cap, cron-style agents, proactive workflows — because a loop design flaw repeats every iteration; Fable reviews stop conditions, interval, verification, blast radius, and cost per iteration once, before it runs. Also use when stuck after 2+ genuinely different failed fix attempts, when finalizing an implementation plan (including in plan mode, before ExitPlanMode), before declaring done on hard-to-revert work (production deploys, migrations, client-facing deliverables), and whenever the user mentions Fable, a second opinion, an advisor, or checking with a stronger model. Covers when a consult is worth 2× Opus token prices, the compact briefing packet, per-task budget caps, and how to weigh the advice.
+description: Consult Claude Fable for a compact strategic second opinion from Codex or Claude Code. Use before costly-to-revert architecture, schema, API, migration, or unattended-automation decisions; after two distinct failed fix attempts; for consequential plan or completion review; or when the user explicitly asks for Fable advice. Codex invokes claude -p with an explicit Fable model; Claude Code uses its native advisor agent. Covers compact evidence packets, three-interaction budgets, and weighing the verdict. Skip routine reversible edits and questions merely about Fable.
 ---
 
 # Fable Advisor — the expensive-consultant protocol
 
-You are an Opus orchestrator. Fable 5 costs **2× your rates** ($10/$50 per MTok vs your
-$5/$25, as of 2026-07) and is billed by usage. Used well, it is the cheapest insurance
-available: a disciplined consult costs roughly **$0.15–0.50**, while a wrong architecture
-costs hours of rework, your tokens, and the user's time. Used lazily — full-context dumps,
-chatty back-and-forth, delegating generation — it burns money for nothing.
+You are a Codex or Claude Code orchestrator consulting Claude Fable. Keep the
+consult small: Fable supplies a verdict; the parent gathers evidence, builds, and
+verifies. Do not assume the parent is Opus or that a fixed price ratio applies to
+its model or subscription. The Codex CLI route pins `claude-fable-5-1`; the native
+Claude agent uses the host's `fable` alias. Use `xhigh` effort for consultations
+on both routes; preserve an explicit user model or effort choice.
 
 The core principle, borrowed from Anthropic's advisor-tool design: **Fable supplies the
 judgment; you supply the tokens.** Fable decides or reviews; you explore, build, write,
@@ -24,7 +25,8 @@ and test. Never hand Fable generation work.
    with evidence to weigh, or a failure you can't explain. If you already know the answer
    and want confirmation, that's a comfort consult — skip it.
 
-If either answer is "no", do not consult.
+If either answer is "no", skip an automatic consult. Honor an explicit request for
+a Fable second opinion even if the parent already runs on a premium model.
 
 ## The five triggers
 
@@ -61,7 +63,7 @@ advice at premium prices.
 ## When NOT to consult
 
 - Easily reversed work: renames, refactors within a file, adding a flag, styling, copy.
-- Decisions already made — by the user, by repo convention, by CLAUDE.md, or by memory.
+- Decisions already made — by the user, by repo convention, by AGENTS.md / CLAUDE.md, or by memory.
 - Routine implementation where the path is clear, however long it is.
 - Generation of any kind: code, documents, configs, workflows. If you're tempted to ask
   Fable to "write" something, that's your job.
@@ -75,10 +77,11 @@ advice at premium prices.
 ## Budget rules (hard)
 
 - **Default one consult per task. Hard cap: three executed Fable interactions per task**
-  (spawns and follow-ups combined; spawn attempts rejected before running don't count).
+  (native spawns, CLI invocations, and follow-ups combined; attempts rejected before
+  model execution do not count).
   Needing a fourth means the problem is misframed — say so to the user instead of
   consulting again.
-- **Announce every consult** in one line before spawning, so the user sees the spend:
+- **Announce every consult** in one line before invoking, so the user sees the spend:
   `Consulting Fable on <decision> (trigger: <which>, consult 1/3).`
 - **Batch questions.** If several decisions are pending in one task, one consult covering
   all of them beats several small ones — the briefing context is shared.
@@ -87,12 +90,23 @@ advice at premium prices.
 - **Respect user overrides.** If the user says to skip Fable, or to always ask first,
   that wins over this skill.
 - Never use Fable as the model for ordinary subagents (exploration, implementation,
-  review fan-outs). This protocol is the only sanctioned Fable use.
+  review fan-outs). This advisory protocol does not restrict separately authorized Fable work.
 
 ## How to consult
 
+Route by the parent host:
+
+- **Codex:** use `claude -p`, not a Codex native sub-agent with a Claude model name.
+  Read [the Codex CLI route](references/codex-cli.md) for the exact command, tool
+  isolation, result checks, and fresh-invocation follow-ups. No Claude plugin install
+  is required: the skill folder contains everything needed to construct the brief.
+- **Claude Code:** use the native agent below. The `fable` alias is host-configurable;
+  record the actual model when available and honor explicit version requests.
+
+### Claude Code native agent
+
 Preferred — the dedicated advisor agent (read-only tools, verdict-format discipline
-built into its system prompt):
+built into its system prompt, `effort: xhigh` in its definition):
 
 ```
 Agent(
@@ -111,7 +125,10 @@ SendMessage. A rejected spawn that never executed does not count against the bud
 
 Fallback — if neither `fable-advisor` nor `fable-advisor:fable-advisor` is in the
 available agent list, spawn
-`general-purpose` with `model: "fable"` and prepend this preamble to the briefing:
+`general-purpose` with `model: "fable"` and an explicit host-supported `xhigh`
+effort setting. If the spawn schema cannot set effort, use a custom read-only
+agent definition with `effort: xhigh`; do not assume the parent effort or a prompt
+request changes the runtime setting. Prepend this preamble to the briefing:
 
 > You are a one-shot strategic advisor to a capable orchestrator that does all the
 > building itself. Supply judgment, not artifacts: no code beyond 10-line sketches, no
@@ -125,10 +142,11 @@ new information, never a re-briefing.
 
 ## The briefing packet
 
-This is where the token savings live. Unlike the API advisor tool, a subagent sees
-**only what you send it** — so curate. Aim for under ~800 words of your own writing;
-excerpts and pointers, never whole files pasted when a path will do (the advisor has
-read-only tools and reads narrowly on demand).
+Curate the briefing rather than forwarding the parent transcript. Aim for 800 words,
+with a 1,200-word ceiling including excerpts. Native advisors can read named files
+narrowly. The default Codex CLI route has no tools: include decisive excerpts and
+label paths as evidence citations, not requests to open files. Runtime system
+context may still be added; a fresh process is not a zero-overhead prompt.
 
 ```
 DECISION: <the question, one sentence, first line>
@@ -145,7 +163,7 @@ CONSTRAINTS: <the hard ones only: budget, existing infra, rate limits, deadline,
 EVIDENCE: <the facts that matter: key excerpts, numbers, exact error output,
            what failed attempts disproved>
 
-FILES (read only if needed):
+FILES (native: read narrowly if needed; tools-disabled CLI: citations only):
   <path> — <one line on what's in it and why it's relevant>   # ≤5 files
 
 ANSWER FORMAT: Verdict first, then top risks, then what would change your mind.
@@ -171,9 +189,9 @@ advisor output ~7× lost no measurable quality.
   against reality (the file says X, the API returns Y), adapt. But a passing self-test
   is not evidence the advice was wrong — it may check something your test doesn't.
 - **Conflicts get one reconcile call, not a silent switch.** If your evidence points one
-  way and Fable points another: `SendMessage` the named advisor — "I found X, you
-  recommend Y — which constraint breaks the tie?" That costs cents; committing to the
-  wrong branch costs hours.
+  way and Fable points another, send the named native advisor one focused follow-up,
+  or make one fresh CLI invocation with the prior verdict and new evidence. Ask which
+  constraint breaks the tie. Count either route within the same interaction cap.
 - **Fable can reject the menu.** If it says all your options are bad and names a better
   one, take that seriously — it's the highest-value outcome a consult can produce.
 

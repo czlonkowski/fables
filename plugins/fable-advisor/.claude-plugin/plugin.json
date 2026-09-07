@@ -1,7 +1,7 @@
 {
   "name": "fable-advisor",
-  "description": "Consult Claude Fable 5 as a strategic advisor at costly-to-revert inflection points: architecture decisions, stuck debugging, plan review, pre-completion review, and unattended loop/schedule design. Compact briefing packets, hard budget caps, terse verdicts — judgment from Fable, tokens from Opus.",
-  "version": "0.3.0",
+  "description": "Consult Claude Fable at consequential decision points with compact briefs and bounded interactions. Uses a native advisor in Claude Code and claude -p from Codex.",
+  "version": "0.4.0",
   "author": {
     "name": "Romuald Członkowski",
     "email": "romuald@aiadvisors.pl",
@@ -10,5 +10,12 @@
   "homepage": "https://github.com/czlonkowski/fables",
   "repository": "https://github.com/czlonkowski/fables",
   "license": "MIT",
-  "keywords": ["fable", "advisor", "orchestrator", "cost-control", "architecture-review", "second-opinion"]
+  "keywords": [
+    "fable",
+    "advisor",
+    "orchestrator",
+    "cost-control",
+    "architecture-review",
+    "second-opinion"
+  ]
 }
