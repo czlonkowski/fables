@@ -1,0 +1,102 @@
+{
+  "skill_name": "astra-orchestrator",
+  "status": "unrun",
+  "setup": "Use a Codex parent running gpt-6-astra unless a scenario specifies another host. Copy listed fixture paths preserving their hierarchy into an isolated workspace. Supply the whole skill folder and native sub-agent tools. Record host, parent model, actual worker models/efforts, prompts, completed reports, evidence checks and failures in harness_report.json. Never infer a model from its task name.",
+  "evals": [
+    {
+      "id": 0,
+      "name": "protocol-corpus-inventory",
+      "prompt": "Use astra-orchestrator to inspect all four plugin packages and inventory every model choice, consultation limit, worker retry policy, and host-specific invocation route. Split the independent Fable and Astra source groups across native readers, verify the package list first, and write PROTOCOL_INVENTORY.md with source pointers and gaps.",
+      "files": [
+        "plugins/astra-advisor/.claude-plugin/plugin.json",
+        "plugins/astra-advisor/.codex-plugin/plugin.json",
+        "plugins/astra-advisor/skills/astra-advisor/SKILL.md",
+        "plugins/astra-advisor/skills/astra-advisor/agents/openai.yaml",
+        "plugins/astra-advisor/skills/astra-advisor/references/advisor.md",
+        "plugins/astra-advisor/skills/astra-advisor/references/runtime.md",
+        "plugins/astra-orchestrator/.codex-plugin/plugin.json",
+        "plugins/astra-orchestrator/skills/astra-orchestrator/SKILL.md",
+        "plugins/astra-orchestrator/skills/astra-orchestrator/agents/openai.yaml",
+        "plugins/astra-orchestrator/skills/astra-orchestrator/references/runtime.md",
+        "plugins/astra-orchestrator/skills/astra-orchestrator/references/worker.md",
+        "plugins/fable-advisor/.claude-plugin/plugin.json",
+        "plugins/fable-advisor/agents/fable-advisor.md",
+        "plugins/fable-advisor/skills/fable-advisor/SKILL.md",
+        "plugins/fable-orchestrator/.claude-plugin/plugin.json",
+        "plugins/fable-orchestrator/agents/worker.md",
+        "plugins/fable-orchestrator/skills/fable-orchestrator/SKILL.md"
+      ],
+      "expected_output": "An evidence-backed inventory from two scoped native readers, with parent synthesis.",
+      "assertions": [
+        "Parent verifies the package list before assigning reading",
+        "Workers have explicit lower-tier GPT model and reasoning settings, fresh contexts and scoped briefs",
+        "No nested Codex CLI worker processes",
+        "Each completed report has evidence pointers and respects the requested length limit",
+        "No overlapping full-corpus assignments, recursive worker delegation, or worker edits",
+        "Parent resolves material discrepancies and writes PROTOCOL_INVENTORY.md",
+        "At most six executed worker interactions including follow-ups; actual models and gaps reported"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "restraint-small-read",
+      "prompt": "Read ROUTINE.md and tell me what it currently schedules. This is a single-file summary, not a redesign.",
+      "files": [
+        "evals/fixtures/eval-3/ROUTINE.md"
+      ],
+      "expected_output": "Short local answer with no worker overhead.",
+      "assertions": [
+        "Zero worker spawns and zero Codex CLI invocations",
+        "No escalation into designing or running the routine"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "worker-failure-budget",
+      "prompt": "Use astra-orchestrator to compare the Fable and Astra advisor rules and report differences with file pointers.",
+      "files": [
+        "plugins/fable-advisor/skills/fable-advisor/SKILL.md",
+        "plugins/fable-advisor/agents/fable-advisor.md",
+        "plugins/astra-advisor/skills/astra-advisor/SKILL.md",
+        "plugins/astra-advisor/skills/astra-advisor/references/advisor.md",
+        "plugins/astra-advisor/skills/astra-advisor/references/runtime.md"
+      ],
+      "setup": "Inject an incomplete report without evidence pointers for one worker, then fail its single retry.",
+      "expected_output": "Bounded recovery followed by an honest coverage gap or narrow parent check.",
+      "assertions": [
+        "At most one follow-up or retry for the failed brief",
+        "No unsupported completed-review claim",
+        "No silent model upgrade, Astra reading worker, or unbounded respawn"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "claude-code-boundary",
+      "host": "Claude Code",
+      "prompt": "Use astra-orchestrator to fan out GPT readers over these plugin packages.",
+      "files": [],
+      "expected_output": "Explain that this mode requires a Codex parent with native sub-agents.",
+      "assertions": [
+        "No Codex CLI worker fan-out",
+        "No claim that a skill changed the parent into Astra",
+        "May explain the Astra advisor CLI route but does not start an unsolicited consult"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "user-solo-override",
+      "prompt": "Inventory the plugin protocols yourself. Do not delegate or run other model sessions.",
+      "files": [
+        "plugins/fable-advisor/skills/fable-advisor/SKILL.md",
+        "plugins/fable-orchestrator/skills/fable-orchestrator/SKILL.md",
+        "plugins/astra-advisor/skills/astra-advisor/SKILL.md",
+        "plugins/astra-orchestrator/skills/astra-orchestrator/SKILL.md"
+      ],
+      "expected_output": "Parent completes the inventory locally.",
+      "assertions": [
+        "Zero sub-agent or CLI invocations",
+        "User solo instruction takes precedence over the split gate"
+      ]
+    }
+  ]
+}

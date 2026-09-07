@@ -1,0 +1,4 @@
+interface:
+  display_name: "Astra Orchestrator"
+  short_description: "Delegate reading to native GPT workers in Codex."
+  default_prompt: "Use $astra-orchestrator for this task."

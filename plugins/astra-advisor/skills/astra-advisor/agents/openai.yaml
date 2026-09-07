@@ -1,0 +1,4 @@
+interface:
+  display_name: "Astra Advisor"
+  short_description: "Get a compact GPT-6 Astra second opinion."
+  default_prompt: "Use $astra-advisor for this task."

@@ -1,0 +1,29 @@
+{
+  "name": "astra-orchestrator",
+  "version": "0.1.0",
+  "description": "Coordinate substantial fact-finding from an Astra session in Codex using native Luna, Terra, and Sol workers with focused briefs and evidence-backed reports.",
+  "author": {
+    "name": "Romuald Członkowski",
+    "email": "romuald@aiadvisors.pl",
+    "url": "https://aiadvisors.pl/en"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Astra Orchestrator",
+    "shortDescription": "Delegate reading to native GPT workers in Codex.",
+    "longDescription": "Coordinate substantial fact-finding from an Astra session in Codex using native Luna, Terra, and Sol workers with focused briefs and evidence-backed reports.",
+    "developerName": "Romuald Członkowski",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": "Use $astra-orchestrator for this task."
+  },
+  "homepage": "https://github.com/czlonkowski/fables",
+  "repository": "https://github.com/czlonkowski/fables",
+  "license": "MIT",
+  "keywords": [
+    "astra",
+    "gpt",
+    "cost-control",
+    "orchestrator"
+  ]
+}

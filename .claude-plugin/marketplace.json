@@ -6,8 +6,8 @@
     "url": "https://aiadvisors.pl/en"
   },
   "metadata": {
-    "description": "Two protocols for Fable 5 economics in Claude Code: consult up (fable-advisor — an Opus orchestrator buys Fable judgment at inflection points) and delegate down (fable-orchestrator — a Fable session pushes bulk reading to cheap parallel workers).",
-    "version": "0.4.0"
+    "description": "Fable protocols for Claude Code and an Astra advisor through Codex CLI. Native Astra orchestration for Codex is also included in the repository.",
+    "version": "0.5.0"
   },
   "plugins": [
     {
@@ -19,6 +19,11 @@
       "name": "fable-orchestrator",
       "source": "./plugins/fable-orchestrator",
       "description": "Run Fable 5 as a coordinator: plan big, execute small. Bulk reading — codebase sweeps, log triage, document review, web research, coverage verification — fans out to parallel workers pinned to Sonnet/Haiku, and only distilled findings enter Fable's premium context. Ported to Claude Code from Anthropic's plan-big-execute-small cookbook."
+    },
+    {
+      "name": "astra-advisor",
+      "source": "./plugins/astra-advisor",
+      "description": "Consult GPT-6 Astra at consequential decision points with evidence, compact briefs, and bounded interactions. Uses native sub-agents in Codex and Codex CLI in Claude Code."
     }
   ]
 }

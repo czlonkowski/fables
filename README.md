@@ -1,9 +1,8 @@
 # fables
 
-**Two Claude Code plugins for one problem: Claude Fable 5 is the best model and the most
-expensive one.**
+**Advisor and orchestrator protocols for Claude Fable and GPT-6 Astra.**
 
-Each plugin is a small fable about using Fable 5 well, and both share a moral —
+Each plugin is a small fable about using a premium model well, sharing a moral —
 *judgment belongs on the strongest model, tokens belong on the cheapest one that can do
 the leg.* Same economics, opposite directions:
 
@@ -11,14 +10,99 @@ the leg.* Same economics, opposite directions:
 |---|---|---|---|
 | [**fable-advisor**](#fable-advisor-consult-up) | consult **up** | Opus (or any model below Fable) | Buy Fable judgment rarely, at costly-to-revert inflection points, with a compact brief |
 | [**fable-orchestrator**](#fable-orchestrator-delegate-down) | delegate **down** | Fable 5 (or any premium model) | Plan big, execute small: push bulk reading to cheap parallel workers, keep only distilled findings at Fable rates |
+| [**astra-advisor**](#astra-advisor-and-astra-orchestrator) | consult **up** | Codex, or Claude Code with Codex CLI | Buy a compact GPT-6 Astra verdict through the host-appropriate route |
+| [**astra-orchestrator**](#astra-advisor-and-astra-orchestrator) | delegate **down** | GPT-6 Astra in Codex | Use native Luna/Terra/Sol readers; keep decisions and synthesis on Astra |
 
-Install one or both:
+Install the Fable plugins in Claude Code:
 
 ```
 /plugin marketplace add czlonkowski/fables
 /plugin install fable-advisor@fables
 /plugin install fable-orchestrator@fables
 ```
+
+---
+
+## astra-advisor and astra-orchestrator
+
+The Astra pair follows the same consult-up / delegate-down pattern, with explicit
+GPT model selection and separate runtime routes:
+
+| Skill | In Codex | In Claude Code |
+|---|---|---|
+| `astra-advisor` | Native `gpt-6-astra` sub-agent, fresh context, `high` reasoning by default | Authenticated `codex exec --model gpt-6-astra`, read-only shell sandbox, ephemeral session |
+| `astra-orchestrator` | Astra parent with native `gpt-5.6-luna`, `gpt-5.6-terra`, or `gpt-5.6-sol` workers | Not supported; CLI consultation belongs to the advisor |
+
+The model IDs were checked against the local Codex catalog and [official OpenAI
+model documentation](https://developers.openai.com/api/docs/models/gpt-6-astra) on
+2026-09-07. CLI examples were checked against `codex-cli 0.153.4 --help`; account
+access must still be available when invoked. A skill does not switch the parent
+model, and a Claude Code agent's model field cannot select a GPT model.
+
+### Use in Codex
+
+This checkout includes `.agents/skills/astra-advisor` and
+`.agents/skills/astra-orchestrator` as relative symlinks to the packaged skills.
+Open Codex in this repository (`fable-advisor/`) and invoke:
+
+```text
+Use $astra-advisor to review this architecture decision before we implement it.
+Use $astra-orchestrator to inventory all API clients and their retry behavior.
+```
+
+Codex supports [repository skills and symlinked skill
+folders](https://learn.chatgpt.com/docs/build-skills). For another project, copy the
+complete desired skill folder from `plugins/<name>/skills/<name>/` into that
+project's `.agents/skills/`. Both packages also contain `.codex-plugin/plugin.json`
+for Codex plugin distribution. No user-level installation or settings change is
+performed by this repository change.
+
+Native delegation explicitly pins model and reasoning and starts with a compact
+brief instead of the parent transcript. If native sub-agents are unavailable,
+report that limitation; do not start nested CLI workers from Codex. See the
+runtime references linked from each skill for the available-tool contract.
+
+### Use the advisor in Claude Code
+
+The Claude Code marketplace includes `astra-advisor` alongside the Fable plugins.
+To load the plugin directly from this checkout:
+
+```bash
+claude --plugin-dir ./plugins/astra-advisor
+```
+
+Or install it from the marketplace:
+
+```text
+/plugin marketplace add czlonkowski/fables
+/plugin install astra-advisor@fables
+```
+
+Invoke `/astra-advisor:astra-advisor` or explicitly ask to use the Astra advisor.
+The skill uses your installed, authenticated Codex CLI, passes the compact brief
+through stdin, and reads the final verdict file after successful completion. It
+does not define a Claude sub-agent with an unsupported GPT model field.
+
+### Protocols and limits
+
+- **Advisor:** default one consult, maximum three executed interactions per task;
+  brief under 1,200 words, up to five file pointers, answer under 300 words. The
+  parent implements and verifies. Explicit second-opinion requests are honored;
+  routine edits and comfort checks do not trigger extra calls.
+- **Orchestrator:** Luna/low for mechanical extraction, Terra/medium for tracing
+  and cross-checks, Sol/high for harder bounded reading. Default two or three
+  independent workers per wave and at most six interactions including retries.
+  Reports carry evidence pointers; the parent checks decisive claims and decides.
+- **Host boundaries:** read-only shell sandboxing does not automatically restrict
+  every connector. Advisors and workers must not mutate external systems, edit
+  project files, or recursively delegate. Respect host permissions and user scope.
+
+These are initial operating defaults. API prices, subscription usage, reasoning,
+and retries affect actual cost; no Fable savings or trigger benchmark is claimed
+for Astra. The new scenarios in `evals/astra-advisor.json` and
+`evals/astra-orchestrator.json` cover consult restraint, exact model selection,
+host routing, worker reports, failures, and user overrides. They are evaluation
+specifications, not measured GPT behavioral results.
 
 ---
 

@@ -1,0 +1,29 @@
+{
+  "name": "astra-advisor",
+  "version": "0.1.0",
+  "description": "Consult GPT-6 Astra at consequential decision points with evidence, compact briefs, and bounded interactions. Uses native sub-agents in Codex and Codex CLI in Claude Code.",
+  "author": {
+    "name": "Romuald Członkowski",
+    "email": "romuald@aiadvisors.pl",
+    "url": "https://aiadvisors.pl/en"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Astra Advisor",
+    "shortDescription": "Get a compact GPT-6 Astra second opinion.",
+    "longDescription": "Consult GPT-6 Astra at consequential decision points with evidence, compact briefs, and bounded interactions. Uses native sub-agents in Codex and Codex CLI in Claude Code.",
+    "developerName": "Romuald Członkowski",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": "Use $astra-advisor for this task."
+  },
+  "homepage": "https://github.com/czlonkowski/fables",
+  "repository": "https://github.com/czlonkowski/fables",
+  "license": "MIT",
+  "keywords": [
+    "astra",
+    "gpt",
+    "cost-control",
+    "advisor"
+  ]
+}
