@@ -29,7 +29,7 @@
       "expected_output": "An evidence-backed inventory from two scoped native readers, with parent synthesis.",
       "assertions": [
         "Parent verifies the package list before assigning reading",
-        "Workers have explicit lower-tier GPT model and reasoning settings, fresh contexts and scoped briefs",
+        "Workers have explicitly selected GPT models and reasoning settings, fresh contexts and scoped briefs; Astra branches have a stated task-specific justification",
         "No nested Codex CLI worker processes",
         "Each completed report has evidence pointers and respects the requested length limit",
         "No overlapping full-corpus assignments, recursive worker delegation, or worker edits",
@@ -64,9 +64,9 @@
       "setup": "Inject an incomplete report without evidence pointers for one worker, then fail its single retry.",
       "expected_output": "Bounded recovery followed by an honest coverage gap or narrow parent check.",
       "assertions": [
-        "At most one follow-up or retry for the failed brief",
+        "At most one follow-up or retry for the failed brief; a justified fresh Astra recovery uses that same retry slot",
         "No unsupported completed-review claim",
-        "No silent model upgrade, Astra reading worker, or unbounded respawn"
+        "No silent model upgrade, model fallback after access/auth/quota errors, or unbounded respawn"
       ]
     },
     {
@@ -96,6 +96,38 @@
       "assertions": [
         "Zero sub-agent or CLI invocations",
         "User solo instruction takes precedence over the split gate"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "shared-corpus-questions",
+      "prompt": "Use astra-orchestrator to answer three related questions about the two orchestrator skills: what they delegate, how they bound retries, and who makes the final decision. Keep this to the two supplied files.",
+      "files": [
+        "plugins/astra-orchestrator/skills/astra-orchestrator/SKILL.md",
+        "plugins/fable-orchestrator/skills/fable-orchestrator/SKILL.md"
+      ],
+      "expected_output": "One parent answer covering all three questions with source pointers.",
+      "assertions": [
+        "No worker fan-out merely because there are three questions",
+        "Parent reads the small shared corpus once and answers all requested questions"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "explicit-astra-evidence-reader",
+      "prompt": "Use one native Astra/high reader to compare the two orchestrator protocols for retry and failure-handling differences. While it reads, inspect the two advisor protocols yourself. Combine the evidence into one report. Read-only; no recursive delegation.",
+      "files": [
+        "plugins/astra-orchestrator/skills/astra-orchestrator/SKILL.md",
+        "plugins/fable-orchestrator/skills/fable-orchestrator/SKILL.md",
+        "plugins/astra-advisor/skills/astra-advisor/SKILL.md",
+        "plugins/fable-advisor/skills/fable-advisor/SKILL.md"
+      ],
+      "expected_output": "The explicitly requested Astra reader covers its independent branch; the parent handles separate advisor reading and final synthesis.",
+      "assertions": [
+        "Exactly one fresh native worker is explicitly configured as gpt-6-astra with high reasoning",
+        "User model choice is honored without forcing cheaper prerequisite workers",
+        "Worker and parent cover distinct source groups; the worker returns evidence pointers",
+        "No CLI worker, writes, recursive delegation, or claim that requesting a model alone proves successful execution"
       ]
     }
   ]

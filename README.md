@@ -11,7 +11,7 @@ the leg.* Same economics, opposite directions:
 | [**fable-advisor**](#fable-advisor-consult-up) | consult **up** | Codex or Claude Code | Buy a compact Fable verdict via Claude CLI or a native Claude agent |
 | [**fable-orchestrator**](#fable-orchestrator-delegate-down) | delegate **down** | Fable 5 (or any premium model) | Plan big, execute small: push bulk reading to cheap parallel workers, keep only distilled findings at Fable rates |
 | [**astra-advisor**](#astra-advisor-and-astra-orchestrator) | consult **up** | Codex, or Claude Code with Codex CLI | Buy a compact GPT-6 Astra verdict through the host-appropriate route |
-| [**astra-orchestrator**](#astra-advisor-and-astra-orchestrator) | delegate **down** | GPT-6 Astra in Codex | Use native Luna/Terra/Sol readers; keep decisions and synthesis on Astra |
+| [**astra-orchestrator**](#astra-advisor-and-astra-orchestrator) | route **deliberately** | GPT-6 Astra in Codex | Prefer Luna readers, selectively use Terra/Sol/Astra, and keep synthesis with the parent |
 
 Install the Fable plugins in Claude Code:
 
@@ -25,13 +25,13 @@ Install the Fable plugins in Claude Code:
 
 ## astra-advisor and astra-orchestrator
 
-The Astra pair follows the same consult-up / delegate-down pattern, with explicit
-GPT model selection and separate runtime routes:
+The Astra pair separates compact consultation from scoped reading delegation,
+with explicit GPT model selection and separate runtime routes:
 
 | Skill | In Codex | In Claude Code |
 |---|---|---|
 | `astra-advisor` | Native `gpt-6-astra` sub-agent, fresh context, `high` reasoning by default | Authenticated `codex exec --model gpt-6-astra`, read-only shell sandbox, ephemeral session |
-| `astra-orchestrator` | Astra parent with native `gpt-5.6-luna`, `gpt-5.6-terra`, or `gpt-5.6-sol` workers | Not supported; CLI consultation belongs to the advisor |
+| `astra-orchestrator` | Astra parent with native Luna workers, selectively Terra/Sol or a justified Astra branch | Not supported; CLI consultation belongs to the advisor |
 
 The model IDs were checked against the local Codex catalog and [official OpenAI
 model documentation](https://developers.openai.com/api/docs/models/gpt-6-astra) on
@@ -89,17 +89,25 @@ does not define a Claude sub-agent with an unsupported GPT model field.
   brief under 1,200 words, up to five file pointers, answer under 300 words. The
   parent implements and verifies. Explicit second-opinion requests are honored;
   routine edits and comfort checks do not trigger extra calls.
-- **Orchestrator:** Luna/low for mechanical extraction, Terra/medium for tracing
-  and cross-checks, Sol/high for harder bounded reading. Default two or three
-  independent workers per wave and at most six interactions including retries.
-  Reports carry evidence pointers; the parent checks decisive claims and decides.
+- **Orchestrator:** keep small shared-corpus work in one parent context. Use
+  Luna/low for mechanical extraction and Luna/high for routine bounded reading;
+  select Luna/max, Terra, or Sol when the task warrants them. Astra/high is a
+  starting point for a difficult independent branch or justified evidence review.
+  A declared reasoning-gap escalation can consume the brief's single retry;
+  access failures do not trigger fallback. At most six worker interactions,
+  including retries. Reports carry evidence pointers; the parent verifies and
+  decides. Count verification and repair when comparing costs.
 - **Host boundaries:** read-only shell sandboxing does not automatically restrict
   every connector. Advisors and workers must not mutate external systems, edit
   project files, or recursively delegate. Respect host permissions and user scope.
 
-These are initial operating defaults. API prices, subscription usage, reasoning,
-and retries affect actual cost; no Fable savings or trigger benchmark is claimed
-for Astra. The new scenarios in `evals/astra-advisor.json` and
+These are operating defaults. A 2026-09-14 pilot (three questions over four source
+files, one attempt per configuration) favored one bundled Astra session; among
+delegated configurations, Luna/high plus Astra verification cost less than the
+prior Luna/low, Terra/medium, Sol/high mix. This does not prove savings on larger
+workloads. API prices, subscription usage, caching, reasoning, verification, and
+retries affect actual cost; no Fable savings or trigger benchmark is claimed for
+Astra. The scenarios in `evals/astra-advisor.json` and
 `evals/astra-orchestrator.json` cover consult restraint, exact model selection,
 host routing, worker reports, failures, and user overrides. They are evaluation
 specifications, not measured GPT behavioral results.

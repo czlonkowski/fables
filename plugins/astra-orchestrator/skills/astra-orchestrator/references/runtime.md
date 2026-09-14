@@ -1,7 +1,7 @@
 # Running GPT reading workers
 
-Use Codex native sub-agents. Model IDs were checked on 2026-09-07 against the local
-Codex model catalog and available native spawn schema. Preserve user model
+Use Codex native sub-agents. Luna, Terra, Sol, and Astra worker models were verified
+in native sessions on 2026-09-14. Preserve user model
 choices and check current access; a catalog entry is not proof of a successful run.
 
 ## Codex native delegation
@@ -12,14 +12,18 @@ context. For a host exposing `collaboration.spawn_agent`, an example is:
 ```json
 {
   "task_name": "auth_inventory",
-  "model": "gpt-5.6-terra",
-  "reasoning_effort": "medium",
+  "model": "gpt-5.6-luna",
+  "reasoning_effort": "high",
   "fork_turns": "none",
   "message": "<worker.md contents followed by the completed brief>"
 }
 ```
 
-Select Luna/low or Sol/high instead when the skill's work table calls for it.
+Use the skill's routing table for other model/effort choices. For a justified
+Astra branch, explicitly set `model: "gpt-6-astra"` and the selected effort
+(`high` is the starting point); do not rely on parent inheritance. State why
+Astra is useful for that branch. A reasoning-gap escalation consumes the brief's
+single retry; access/authentication/quota failures do not trigger model fallback.
 `fork_turns: "none"` avoids transcript inheritance and allows model overrides in
 this interface. Include the project path and relevant instructions in the brief.
 Runtime system context still applies. Inspect other hosts' actual schemas; do not
@@ -40,5 +44,6 @@ spawn from a completed report; report missing coverage honestly.
 
 Sources: [Codex subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents),
 [OpenAI model catalog](https://developers.openai.com/api/docs/models).
-The Luna/Terra/Sol assignments in the skill are operating defaults to evaluate on
-the actual task, not benchmark-derived cost or quality promises.
+All routing choices are operating defaults to evaluate on the actual task, not
+guaranteed cost or quality improvements. Record the actual model and effort from
+session metadata when available; a requested model alone does not prove execution.

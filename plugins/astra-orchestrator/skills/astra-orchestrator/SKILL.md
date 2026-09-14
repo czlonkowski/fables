@@ -1,6 +1,6 @@
 ---
 name: astra-orchestrator
-description: Coordinate substantial fact-finding from a GPT-6 Astra session in Codex using native GPT-5.6 Luna, Terra, or Sol workers. Use for codebase sweeps, multi-file log triage, document corpora, research, and coverage checks where independent readers can return concise evidence. Keeps judgment and synthesis on Astra while bounding worker context and retries. Skip small reads, pure generation, and second-opinion requests that belong to astra-advisor.
+description: Coordinate substantial fact-finding from an Astra session in Codex using native workers, usually Luna and selectively Terra, Sol, or Astra. Use for codebase sweeps, log triage, document corpora, research, and coverage checks with independent reading branches. Keep small shared-context work with the parent; bound worker context, verification, and retries. Compact second-opinion verdicts belong to astra-advisor.
 ---
 
 # Astra Orchestrator
@@ -15,10 +15,18 @@ tradeoff makes sense. Do not label a run Astra-led unless it is.
 
 ## Gate the split
 
-Delegate when the reading is necessary, larger than a handful of files or pages,
-and a worker can extract the needed facts without losing decisive nuance. Handle
-small reads locally. Keep raw material with the parent when the judgment depends
-on subtle wording, missing behavior, or context a summary would erase.
+Delegate necessary reading when it forms a substantial independent branch and a
+worker can return the needed evidence without losing decisive nuance. Usually
+handle a handful of files locally. Answer related questions over a small shared
+corpus in one parent context. Several questions do not by themselves justify
+several workers. Keep raw material with
+the parent when subtle wording, missing behavior, or shared context would be lost
+in a summary. Delegate an independent difficult branch to Astra when the criteria
+below apply.
+
+Compare the whole path: worker reading, parent coordination and verification,
+retries, and repair. If verification would repeat most of a worker's reading,
+prefer direct parent work or a suitably capable worker from the start.
 
 This skill explicitly instructs bounded worker delegation when that gate is met
 and Codex permits native delegation. Honor the user's instruction to work solo or use a
@@ -29,15 +37,29 @@ particular model. Do not spawn agents merely to demonstrate this skill.
 | Work | Default model | Reasoning |
 |---|---|---|
 | Mechanical inventory, exact pattern extraction, link or format checks | `gpt-5.6-luna` | `low` |
-| Code tracing, log triage, source cross-checks, document extraction | `gpt-5.6-terra` | `medium` |
-| Difficult bounded reading that needs more reasoning | `gpt-5.6-sol` | `high` |
+| Routine bounded code tracing, log triage, source cross-checks, document extraction | `gpt-5.6-luna` | `high` |
+| Bounded extraction where extra reasoning is worth the latency | `gpt-5.6-luna` | `max`, selectively |
+| Work where task-specific evidence favors Terra or Sol over Luna | `gpt-5.6-terra` / `gpt-5.6-sol` | `medium` / `high`, starting points |
+| Difficult independent branch or separately justified evidence review | `gpt-6-astra` | `high`, starting point |
 
-These are starting choices, not measured task-quality guarantees. Preserve user
-overrides and verify availability in the active host. Do not silently substitute
-another model on failure. Set the model and effort on every spawn: unconfigured
-subagents can inherit Astra and its reasoning effort, defeating the intended split.
-Do not use Astra for a routine reading worker. If the work requires Astra judgment,
-the parent handles it or uses a separately justified independent review.
+Use an Astra worker when a bounded branch needs subtle multi-step reasoning,
+omission detection, or independent verification that a cheap summary is unlikely
+to preserve, and the parent has useful separate work. Explain why that branch
+benefits from Astra and a fresh context. Keep a narrow decisive check local when
+the parent already has its context. Final judgment and synthesis stay with the
+parent. A compact second-opinion verdict still belongs to `astra-advisor`.
+
+Choose model and effort together; do not automatically move through a
+Luna → Terra → Sol → Astra ladder. These are operating defaults, not task-quality
+guarantees. A September 2026 pilot on three questions over four files favored
+bundled parent work; Luna/high plus Astra verification cost less than the prior
+mix at the same final critical coverage. Luna/max had no final critical-coverage
+advantage. That small, unrepeated
+pilot does not establish a ranking for larger workloads or other effort levels.
+
+Preserve user overrides and verify current host availability. Set model and
+effort on every spawn; inherited Astra settings are not deliberate routing.
+Change a failed brief's model only as the announced, justified recovery below.
 
 ## Decompose once
 
@@ -70,6 +92,10 @@ model-selected contexts. Do not fork the whole parent conversation into workers.
   checks, retries, and follow-ups. Plan within that cap and any stricter user limits;
   a larger workload needs a stated revised budget, not an open-ended fan-out.
 - For an incomplete report, send one focused follow-up or retry that brief once.
+  For a substantive reasoning or evidence gap, that single retry may instead be
+  a fresh, explicitly selected Astra worker when the independent-branch criteria
+  apply. State the reason and model before launching; do not first retry the old
+  worker and then add an escalation. All attempts count toward the same cap.
   Stop after a repeated failure, report the gap, and resolve a narrow decisive part
   locally if useful. Access or quota errors are blockers to that route, not grounds
   for repeated calls or silent model escalation.
@@ -86,12 +112,14 @@ model-selected contexts. Do not fork the whole parent conversation into workers.
 
 Weigh the findings, implement or write the authorized deliverable, and verify it.
 Report how many workers completed, their actual models, the scope covered, and any
-gaps. Example: `Three workers (one Luna, two Terra) covered the API, jobs, and auth
+gaps. Example: `Three workers (two Luna, one Astra) covered the API, jobs, and auth
 modules; I verified the disputed auth finding and made the final recommendation.`
 
 Do not claim a savings percentage, token count, or bill without measured usage.
-Separate API per-token prices from subscription allowances; retries and reasoning
-can offset nominal savings. No Fable benchmark result transfers to this protocol.
+Include parent verification and repair in cost comparisons; report any excluded
+coordination overhead. Separate API-equivalent costs from subscription allowances
+and actual bills. Reasoning, cache hits, and retries affect the result. No Fable
+benchmark result transfers to this protocol.
 
 For a lower-tier parent seeking a compact Astra verdict, use the sibling
 `astra-advisor` protocol instead.
