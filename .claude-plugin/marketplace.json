@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Fable and Astra advisor protocols for Codex and Claude Code, plus native orchestration skills for their respective hosts.",
-    "version": "0.6.0"
+    "version": "0.6.1"
   },
   "plugins": [
     {
@@ -18,7 +18,7 @@
     {
       "name": "fable-orchestrator",
       "source": "./plugins/fable-orchestrator",
-      "description": "Run Fable 5 as a coordinator: plan big, execute small. Bulk reading — codebase sweeps, log triage, document review, web research, coverage verification — fans out to parallel workers pinned to Sonnet/Haiku, and only distilled findings enter Fable's premium context. Ported to Claude Code from Anthropic's plan-big-execute-small cookbook."
+      "description": "Run Fable 5.1 (or Opus 5.5) as a coordinator: plan big, execute small. Bulk reading — codebase sweeps, log triage, document review, web research, coverage verification — fans out to parallel workers pinned to Sonnet/Haiku, and only distilled findings enter Fable's premium context. Ported to Claude Code from Anthropic's plan-big-execute-small cookbook."
     },
     {
       "name": "astra-advisor",

@@ -9,7 +9,7 @@ the leg.* Same economics, opposite directions:
 | Plugin | Direction | For sessions running on | One line |
 |---|---|---|---|
 | [**fable-advisor**](#fable-advisor-consult-up) | consult **up** | Codex or Claude Code | Buy a compact Fable verdict via Claude CLI or a native Claude agent |
-| [**fable-orchestrator**](#fable-orchestrator-delegate-down) | delegate **down** | Fable 5 (or any premium model) | Plan big, execute small: push bulk reading to cheap parallel workers, keep only distilled findings at Fable rates |
+| [**fable-orchestrator**](#fable-orchestrator-delegate-down) | delegate **down** | Fable 5.1 (or any premium model, e.g. Opus 5.5) | Plan big, execute small: push bulk reading to cheap parallel workers, keep only distilled findings at Fable rates |
 | [**astra-advisor**](#astra-advisor-and-astra-orchestrator) | consult **up** | Codex, or Claude Code with Codex CLI | Buy a compact GPT-6 Astra verdict through the host-appropriate route |
 | [**astra-orchestrator**](#astra-advisor-and-astra-orchestrator) | route **deliberately** | GPT-6 Astra in Codex | Prefer Luna readers, selectively use Terra/Sol/Astra, and keep synthesis with the parent |
 
@@ -297,7 +297,8 @@ briefing compactness, and outcome quality.
 
 **Plan big, execute small.**
 
-Teaches a session running **on Fable 5** to work like the coordinator in
+Teaches a session running **on Fable 5.1** (or another premium model such as Opus 5.5)
+to work like the coordinator in
 [Anthropic's plan-big-execute-small cookbook](https://github.com/anthropics/claude-cookbooks/blob/main/managed_agents/CMA_plan_big_execute_small.ipynb):
 Fable plans, decomposes, and synthesizes — but never pulls bulk material into its own
 context. Cheap parallel workers (Sonnet/Haiku) do the token-heavy reading in their own
@@ -306,8 +307,9 @@ context windows and report back distilled findings.
 ### Why
 
 Most substantial tasks are two jobs in one: a little judgment and a lot of mechanical
-reading. On a Fable session both bill at **$10/$50 per MTok** — 5× Sonnet 5, 10× Haiku
-4.5 — unless the reading is moved.
+reading. On a Fable 5.1 session both bill at **$10/$50 per MTok** — 5× Sonnet 5.5, 10×
+Haiku 4.5 — unless the reading is moved. On Opus 5.5 ($4/$20) the gap to Sonnet shrinks
+to 2×, but it's still there. (Prices as of 2026-09.)
 
 And there's a trap that makes naive delegation useless: **subagents inherit the session
 model.** On a Fable session, an un-pinned `Explore` or `general-purpose` spawn runs on
@@ -331,14 +333,15 @@ rates**. (Their numbers, on web research; we haven't re-measured in Claude Code 
 believes it can do itself, and "just read everything myself" is exactly such work):
 
 ```
-When this session runs on Fable 5 or another premium model and a task requires bulk
+When this session runs on Fable 5.1 or another premium model and a task requires bulk
 reading — sweeping code, triaging logs, reviewing documents, researching the web —
 consult the fable-orchestrator skill before reading the material yourself.
 ```
 
-Requirements: Claude Code with Sonnet/Haiku available as subagent models. Designed for
-sessions where the base model is Fable 5; the protocol applies from any premium
-orchestrator.
+Requirements: Claude Code with Sonnet/Haiku available as subagent models (the `sonnet`
+alias resolves to Sonnet 5.5 from Claude Code 2.1.284). Designed for sessions where the
+base model is Fable 5.1; the protocol applies from any premium orchestrator, including
+Opus 5.5.
 
 ### How it works
 

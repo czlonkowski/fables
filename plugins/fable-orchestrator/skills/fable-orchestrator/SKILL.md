@@ -1,13 +1,14 @@
 ---
 name: fable-orchestrator
-description: Delegation protocol for sessions running on Claude Fable 5 (or any premium model) — plan big, execute small. Use BEFORE pulling any bulk material into your own context — sweeping a codebase, triaging logs, reviewing a document set, researching across many web pages, verifying N facts against sources, auditing every workflow/config/endpoint, or any task where the reading is mandatory and voluminous. Critical because subagents inherit the session model — on a Fable session an un-pinned Explore or general-purpose spawn bills at Fable rates, so delegation alone saves nothing; this skill makes the rate split real with parallel workers pinned to Sonnet/Haiku that read in their own contexts and report distilled findings (~2.5× cheaper, ~3× faster, 84–98% of input at worker rates in Anthropic's cookbook measurements). Fires on phrasings like "sweep", "audit all", "go through every", "check each", "triage these logs", "research across", "verify against the docs", "keep the cost down", "fan out", "delegate the reading", "plan big execute small". Covers the delegate-or-read gate, the worker brief format, model-tier choice, brief granularity, premise verification, and when NOT to split (narrow reads, judgment that needs frontier eyes on the raw material).
+description: Delegation protocol for sessions running on Claude Fable 5.1 (or any premium model, including Opus 5.5) — plan big, execute small. Use BEFORE pulling any bulk material into your own context — sweeping a codebase, triaging logs, reviewing a document set, researching across many web pages, verifying N facts against sources, auditing every workflow/config/endpoint, or any task where the reading is mandatory and voluminous. Critical because subagents inherit the session model — on a Fable session an un-pinned Explore or general-purpose spawn bills at Fable rates, so delegation alone saves nothing; this skill makes the rate split real with parallel workers pinned to Sonnet/Haiku that read in their own contexts and report distilled findings (~2.5× cheaper, ~3× faster, 84–98% of input at worker rates in Anthropic's cookbook measurements). Fires on phrasings like "sweep", "audit all", "go through every", "check each", "triage these logs", "research across", "verify against the docs", "keep the cost down", "fan out", "delegate the reading", "plan big execute small". Covers the delegate-or-read gate, the worker brief format, model-tier choice, brief granularity, premise verification, and when NOT to split (narrow reads, judgment that needs frontier eyes on the raw material).
 ---
 
 # Fable Orchestrator — plan big, execute small
 
-You are an expensive model orchestrating a session: Fable 5 bills **$10/$50 per MTok —
-5× Sonnet 5 ($2/$10 introductory) and 10× Haiku 4.5 ($1/$5), as of 2026-07**. Most
-substantial tasks hide two very different jobs: a small amount of planning and judgment,
+You are an expensive model orchestrating a session: Fable 5.1 bills **$10/$50 per MTok —
+5× Sonnet 5.5 ($2/$10) and 10× Haiku 4.5 ($1/$5), as of 2026-09**. On Opus 5.5
+($4/$20) the gap to Sonnet is 2× — smaller, but bulk reading still belongs with
+workers. Most substantial tasks hide two very different jobs: a small amount of planning and judgment,
 and a large amount of mechanical reading. Your judgment is why the user runs you. The
 mechanical reading is a waste of your rate.
 

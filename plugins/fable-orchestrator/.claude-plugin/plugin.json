@@ -1,7 +1,7 @@
 {
   "name": "fable-orchestrator",
-  "description": "Run Fable 5 as a coordinator: plan big, execute small. Bulk reading — codebase sweeps, log triage, document review, web research, coverage verification — fans out to parallel workers pinned to Sonnet/Haiku, and only distilled findings enter Fable's premium context. Ported to Claude Code from Anthropic's plan-big-execute-small cookbook.",
-  "version": "0.1.0",
+  "description": "Run Fable 5.1 (or Opus 5.5) as a coordinator: plan big, execute small. Bulk reading — codebase sweeps, log triage, document review, web research, coverage verification — fans out to parallel workers pinned to Sonnet/Haiku, and only distilled findings enter Fable's premium context. Ported to Claude Code from Anthropic's plan-big-execute-small cookbook.",
+  "version": "0.1.1",
   "author": {
     "name": "Romuald Członkowski",
     "email": "romuald@aiadvisors.pl",
