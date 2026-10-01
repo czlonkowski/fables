@@ -1,6 +1,6 @@
 ---
 name: astra-orchestrator
-description: Coordinate substantial fact-finding from an Astra session in Codex using native workers, usually Luna and selectively Terra, Sol, or Astra. Use for codebase sweeps, log triage, document corpora, research, and coverage checks with independent reading branches. Keep small shared-context work with the parent; bound worker context, verification, and retries. Compact second-opinion verdicts belong to astra-advisor.
+description: Coordinate substantial fact-finding from an Astra session in Codex using native Sol 6.1 and Luna 6 workers, with Astra for justified difficult branches. Use for codebase sweeps, log triage, document corpora, research, and coverage checks with independent reading branches. Keep small shared-context work with the parent; bound worker context, verification, and retries. Compact second-opinion verdicts belong to astra-advisor.
 ---
 
 # Astra Orchestrator
@@ -36,11 +36,17 @@ particular model. Do not spawn agents merely to demonstrate this skill.
 
 | Work | Default model | Reasoning |
 |---|---|---|
-| Mechanical inventory, exact pattern extraction, link or format checks | `gpt-5.6-luna` | `low` |
-| Routine bounded code tracing, log triage, source cross-checks, document extraction | `gpt-5.6-luna` | `high` |
-| Bounded extraction where extra reasoning is worth the latency | `gpt-5.6-luna` | `max`, selectively |
-| Work where task-specific evidence favors Terra or Sol over Luna | `gpt-5.6-terra` / `gpt-5.6-sol` | `medium` / `high`, starting points |
+| Mechanical inventory, exact pattern extraction, link or format checks | `gpt-6-luna` | `low` |
+| Routine document extraction, log triage, bounded source cross-checks | `gpt-6-luna` | `high` |
+| Code tracing across modules, debugging analysis, or extraction requiring substantial interpretation | `gpt-6.1-sol` | `high` |
+| Bounded Sol branch where extra reasoning is justified by complexity | `gpt-6.1-sol` | `xhigh`, selectively |
 | Difficult independent branch or separately justified evidence review | `gpt-6-astra` | `high`, starting point |
+
+Sol 6.1 and Luna 6 are the normal worker choices. Terra 5.6 and other 5.6
+workers are legacy options only for an explicit user request or concrete
+task-specific evidence; do not use them as defaults or automatic fallbacks.
+This routing supersedes the earlier preference for Terra over Luna within this
+skill. Use `gpt-6-luna` for Luna 6 and `gpt-6.1-sol` for Sol 6.1.
 
 Use an Astra worker when a bounded branch needs subtle multi-step reasoning,
 omission detection, or independent verification that a cheap summary is unlikely
@@ -49,17 +55,18 @@ benefits from Astra and a fresh context. Keep a narrow decisive check local when
 the parent already has its context. Final judgment and synthesis stay with the
 parent. A compact second-opinion verdict still belongs to `astra-advisor`.
 
-Choose model and effort together; do not automatically move through a
-Luna → Terra → Sol → Astra ladder. These are operating defaults, not task-quality
-guarantees. A September 2026 pilot on three questions over four files favored
-bundled parent work; Luna/high plus Astra verification cost less than the prior
-mix at the same final critical coverage. Luna/max had no final critical-coverage
-advantage. That small, unrepeated
-pilot does not establish a ranking for larger workloads or other effort levels.
+Choose model and effort together based on the branch; do not automatically
+move through a Luna → Sol → Astra ladder. These are operating defaults, not
+measured quality or cost rankings. Earlier pilots using 5.6 workers do not
+establish how Luna 6 and Sol 6.1 compare.
 
-Preserve user overrides and verify current host availability. Set model and
-effort on every spawn; inherited Astra settings are not deliberate routing.
-Change a failed brief's model only as the announced, justified recovery below.
+Preserve user overrides and verify current host model and effort availability
+before spawning. If Luna 6 is absent and the user has not pinned Luna, state
+that limitation and choose available Sol 6.1 for a justified branch, or handle
+it locally. If the user pinned an unavailable model, report the blocker rather
+than substitute. Set model and effort on every spawn; inherited Astra settings
+are not deliberate routing. Change a failed brief's model only as the announced,
+justified recovery below.
 
 ## Decompose once
 

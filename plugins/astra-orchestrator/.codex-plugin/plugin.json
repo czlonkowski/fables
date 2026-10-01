@@ -1,7 +1,7 @@
 {
   "name": "astra-orchestrator",
-  "version": "0.1.0",
-  "description": "Coordinate substantial fact-finding from an Astra session in Codex using native Luna readers and selectively Terra, Sol, or Astra for justified branches, with bounded verification and retries.",
+  "version": "0.1.1",
+  "description": "Coordinate substantial fact-finding from an Astra session in Codex using native Sol 6.1 and Luna 6 readers, with Astra for justified difficult branches and bounded verification and retries.",
   "author": {
     "name": "Romuald Członkowski",
     "email": "romuald@aiadvisors.pl",
@@ -11,7 +11,7 @@
   "interface": {
     "displayName": "Astra Orchestrator",
     "shortDescription": "Delegate reading to native GPT workers in Codex.",
-    "longDescription": "Coordinate substantial fact-finding from an Astra session in Codex using native Luna readers and selectively Terra, Sol, or Astra for justified branches, with bounded verification and retries.",
+    "longDescription": "Coordinate substantial fact-finding from an Astra session in Codex using native Sol 6.1 and Luna 6 readers, with Astra for justified difficult branches and bounded verification and retries.",
     "developerName": "Romuald Członkowski",
     "category": "Productivity",
     "capabilities": [],

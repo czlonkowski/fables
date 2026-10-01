@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Fable and Astra advisor protocols for Codex and Claude Code, plus native orchestration skills for their respective hosts.",
-    "version": "0.6.1"
+    "version": "0.6.2"
   },
   "plugins": [
     {
@@ -24,6 +24,11 @@
       "name": "astra-advisor",
       "source": "./plugins/astra-advisor",
       "description": "Consult GPT-6 Astra at consequential decision points with evidence, compact briefs, and bounded interactions. Uses native sub-agents in Codex and Codex CLI in Claude Code."
+    },
+    {
+      "name": "astra-orchestrator",
+      "source": "./plugins/astra-orchestrator",
+      "description": "Coordinate scoped reading with native Sol 6.1 and Luna 6 workers, with Astra for justified difficult branches. Requires a host with native Codex sub-agents; not supported in Claude Code."
     }
   ]
 }
