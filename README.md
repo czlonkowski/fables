@@ -9,7 +9,7 @@ the leg.* Same economics, opposite directions:
 | Plugin | Direction | For sessions running on | One line |
 |---|---|---|---|
 | [**fable-advisor**](#fable-advisor-consult-up) | consult **up** | Codex or Claude Code | Buy a compact Fable verdict via Claude CLI or a native Claude agent |
-| [**fable-orchestrator**](#fable-orchestrator-delegate-down) | delegate **down** | Fable 5.1 (or any premium model, e.g. Opus 5.5) | Plan big, execute small: push bulk reading to cheap parallel workers, keep only distilled findings at Fable rates |
+| [**fable-orchestrator**](#fable-orchestrator-delegate-down) | delegate **down** | Fable 5.2 (or any premium model, e.g. Opus 5.5) | Plan big, execute small: push bulk reading to cheap parallel workers, keep only distilled findings at Fable rates |
 | [**astra-advisor**](#astra-advisor-and-astra-orchestrator) | consult **up** | Codex, or Claude Code with Codex CLI | Buy a compact GPT-6 Astra verdict through the host-appropriate route |
 | [**astra-orchestrator**](#astra-advisor-and-astra-orchestrator) | route **deliberately** | GPT-6 Astra in Codex | Use Sol 6.1 and Luna 6 readers, selectively use Astra, and keep synthesis with the parent |
 
@@ -129,7 +129,7 @@ and verifies; Fable returns a compact verdict. Both consultation routes use
 
 | Parent host | Invocation | Model / effort |
 |---|---|---|
-| Codex | `claude -p` with a compact briefing on stdin | `claude-fable-5-1`, `--effort xhigh` |
+| Codex | `claude -p` with a compact briefing on stdin | `claude-fable-5-2`, `--effort xhigh` |
 | Claude Code | Native `fable-advisor` agent | `model: fable`, `effort: xhigh` |
 
 ### Why
@@ -156,7 +156,7 @@ Skill Installer, or copy it into that project's `.agents/skills/fable-advisor/`.
 It includes its CLI reference and does not require the Claude plugin to be installed.
 
 The [CLI route](plugins/fable-advisor/skills/fable-advisor/references/codex-cli.md)
-uses `claude -p --model claude-fable-5-1 --effort xhigh`, tools disabled, safe mode,
+uses `claude -p --model claude-fable-5-2 --effort xhigh`, tools disabled, safe mode,
 JSON output, and no persisted session. It bounds turns, spend, and runtime, verifies
 success and model metadata, and uses a fresh invocation for a justified follow-up.
 Codex supplies source excerpts because the default advisor cannot open files.
@@ -187,7 +187,8 @@ the fable-advisor skill first.
 ```
 
 Requirements: authenticated Claude Code with the selected Fable model available.
-The tested Codex CLI route uses Claude Code 2.1.263; Fable 5.1 requires 2.1.255+.
+The Codex CLI route was smoke-tested with Fable 5.1 on Claude Code 2.1.263; Fable 5.2
+needs a CLI newer than 2.1.310 (`claude update`).
 The native agent stays inside Claude Code; Codex invokes the CLI process instead.
 
 ### Making it fire reliably
@@ -302,7 +303,7 @@ briefing compactness, and outcome quality.
 
 **Plan big, execute small.**
 
-Teaches a session running **on Fable 5.1** (or another premium model such as Opus 5.5)
+Teaches a session running **on Fable 5.2** (or another premium model such as Opus 5.5)
 to work like the coordinator in
 [Anthropic's plan-big-execute-small cookbook](https://github.com/anthropics/claude-cookbooks/blob/main/managed_agents/CMA_plan_big_execute_small.ipynb):
 Fable plans, decomposes, and synthesizes — but never pulls bulk material into its own
@@ -312,9 +313,9 @@ context windows and report back distilled findings.
 ### Why
 
 Most substantial tasks are two jobs in one: a little judgment and a lot of mechanical
-reading. On a Fable 5.1 session both bill at **$10/$50 per MTok** — 5× Sonnet 5.5, 10×
+reading. On a Fable 5.2 session both bill at **$8/$40 per MTok** — 4× Sonnet 5.5, 8×
 Haiku 4.5 — unless the reading is moved. On Opus 5.5 ($4/$20) the gap to Sonnet shrinks
-to 2×, but it's still there. (Prices as of 2026-09.)
+to 2×, but it's still there. (Prices as of 2026-11.)
 
 And there's a trap that makes naive delegation useless: **subagents inherit the session
 model.** On a Fable session, an un-pinned `Explore` or `general-purpose` spawn runs on
@@ -338,14 +339,14 @@ rates**. (Their numbers, on web research; we haven't re-measured in Claude Code 
 believes it can do itself, and "just read everything myself" is exactly such work):
 
 ```
-When this session runs on Fable 5.1 or another premium model and a task requires bulk
+When this session runs on Fable 5.2 or another premium model and a task requires bulk
 reading — sweeping code, triaging logs, reviewing documents, researching the web —
 consult the fable-orchestrator skill before reading the material yourself.
 ```
 
 Requirements: Claude Code with Sonnet/Haiku available as subagent models (the `sonnet`
 alias resolves to Sonnet 5.5 from Claude Code 2.1.284). Designed for sessions where the
-base model is Fable 5.1; the protocol applies from any premium orchestrator, including
+base model is Fable 5.2; the protocol applies from any premium orchestrator, including
 Opus 5.5.
 
 ### How it works
@@ -372,7 +373,7 @@ over-splitting *raised* the bill.
 - Decisions, plans, and synthesis never delegated down — workers report facts
 - One premise-verification worker when the fan-out rests on an assumed list (the
   cookbook's own run verified 20 facts perfectly against a park list that was wrong)
-- Failed worker → re-assign the brief once; don't quietly read it yourself at 5× the rate
+- Failed worker → re-assign the brief once; don't quietly read it yourself at 4× the rate
 - Reports are trusted: no re-reading what a worker read, spot-checks only narrow and
   only for load-bearing surprises
 - The final message tells the user the shape of the run: how many workers, which

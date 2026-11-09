@@ -6,9 +6,11 @@ route in `SKILL.md`. A Codex native sub-agent cannot select a Claude model; invo
 
 ## Prepare and invoke
 
-Check `claude --version` and `claude --help`. The command below was smoke-tested on
-2026-09-07 with Claude Code 2.1.263 and the existing subscription login. Fable 5.1
-requires 2.1.255 or newer. Use `claude-fable-5-1` for an explicit version; `fable`
+Check `claude --version` and `claude --help`. Fable 5.2 (`claude-fable-5-2`,
+released 2026-11-09) is not recognized by Claude Code 2.1.310; update the CLI
+(`claude update`) before using it. The invocation below was smoke-tested on
+2026-09-07 with `claude-fable-5-1` on Claude Code 2.1.263; the 5.2 pin is not yet
+smoke-tested. Use `claude-fable-5-2` for an explicit version; `fable`
 is a configurable alias and can change. Honor a user-requested version or provider
 model ID. Do not configure a fallback model for a Fable-only consultation.
 
@@ -22,7 +24,7 @@ Set `task_tmp` to that directory's absolute path. Run from it using the shell
 tool's working-directory parameter, with unique output paths per interaction:
 
 ```bash
-claude -p --model claude-fable-5-1 --effort xhigh \
+claude -p --model claude-fable-5-2 --effort xhigh \
   --safe-mode --tools '' \
   --output-format json --no-session-persistence \
   --max-turns 1 --max-budget-usd 1.00 \
@@ -84,8 +86,8 @@ Return the `result` verdict to the parent. Retain `modelUsage`, `num_turns`, and
 estimate, not a verified subscription charge. Do not paste the entire JSON payload
 into the parent conversation when the verdict and a short usage summary suffice.
 
-The live advisory smoke test used `--effort xhigh` with a synthetic document-sync
-brief. It returned a 172-word verdict, `is_error: false`, one turn, and
+The 2026-09-07 live advisory smoke test (Fable 5.1) used `--effort xhigh` with a
+synthetic document-sync brief. It returned a 172-word verdict, `is_error: false`, one turn, and
 `claude-fable-5-1` usage. Its reported total cost was $0.062922 including ancillary
 Haiku usage. This verifies CLI invocation and result handling, not a quality benchmark.
 

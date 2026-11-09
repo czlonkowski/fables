@@ -8,7 +8,7 @@ description: Consult Claude Fable for a compact strategic second opinion from Co
 You are a Codex or Claude Code orchestrator consulting Claude Fable. Keep the
 consult small: Fable supplies a verdict; the parent gathers evidence, builds, and
 verifies. Do not assume the parent is Opus or that a fixed price ratio applies to
-its model or subscription. The Codex CLI route pins `claude-fable-5-1`; the native
+its model or subscription. The Codex CLI route pins `claude-fable-5-2`; the native
 Claude agent uses the host's `fable` alias. Use `xhigh` effort for consultations
 on both routes; preserve an explicit user model or effort choice.
 
