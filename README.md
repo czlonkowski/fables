@@ -187,8 +187,8 @@ the fable-advisor skill first.
 ```
 
 Requirements: authenticated Claude Code with the selected Fable model available.
-The Codex CLI route was smoke-tested with Fable 5.1 on Claude Code 2.1.263; Fable 5.2
-needs a CLI newer than 2.1.310 (`claude update`).
+The Codex CLI route was smoke-tested with Fable 5.2 on Claude Code 2.1.321; 2.1.310
+and older do not recognize Fable 5.2 (`claude update`).
 The native agent stays inside Claude Code; Codex invokes the CLI process instead.
 
 ### Making it fire reliably

@@ -6,11 +6,10 @@ route in `SKILL.md`. A Codex native sub-agent cannot select a Claude model; invo
 
 ## Prepare and invoke
 
-Check `claude --version` and `claude --help`. Fable 5.2 (`claude-fable-5-2`,
-released 2026-11-09) is not recognized by Claude Code 2.1.310; update the CLI
-(`claude update`) before using it. The invocation below was smoke-tested on
-2026-09-07 with `claude-fable-5-1` on Claude Code 2.1.263; the 5.2 pin is not yet
-smoke-tested. Use `claude-fable-5-2` for an explicit version; `fable`
+Check `claude --version` and `claude --help`. The command below was smoke-tested on
+2026-11-09 with `claude-fable-5-2` on Claude Code 2.1.321 and the existing
+subscription login. Fable 5.2 is not recognized by 2.1.310 or older; run
+`claude update` first. Use `claude-fable-5-2` for an explicit version; `fable`
 is a configurable alias and can change. Honor a user-requested version or provider
 model ID. Do not configure a fallback model for a Fable-only consultation.
 
