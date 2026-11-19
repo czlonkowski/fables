@@ -1,13 +1,13 @@
 ---
 name: astra-advisor
-description: Consult GPT-6 Astra for a compact second opinion on costly-to-revert decisions, architecture forks, stuck debugging after two distinct failed attempts, production plans, or consequential unattended automation. Use when the user asks for Astra advice or when a lower-tier orchestrator needs an evidence-backed strategic verdict. Covers briefing, explicit model selection, bounded consults, and weighing the answer; skip routine reversible edits and requests merely asking about Astra.
+description: Consult GPT-6.2 Astra for a compact second opinion on costly-to-revert decisions, architecture forks, stuck debugging after two distinct failed attempts, production plans, or consequential unattended automation. Use when the user asks for Astra advice or when a lower-tier orchestrator needs an evidence-backed strategic verdict. Covers briefing, explicit model selection, bounded consults, and weighing the answer; skip routine reversible edits and requests merely asking about Astra.
 ---
 
 # Astra Advisor
 
-Buy a small amount of GPT-6 Astra judgment at a decision point. The parent agent
+Buy a small amount of GPT-6.2 Astra judgment at a decision point. The parent agent
 gathers evidence, implements, and verifies; the advisor returns a verdict. Default
-advisor: `gpt-6-astra`, reasoning `high`. Honor an explicit user model or effort
+advisor: `gpt-6.2-astra`, reasoning `high`. Honor an explicit user model or effort
 choice; do not silently substitute a different model if Astra is unavailable.
 
 ## Decide whether to consult
@@ -36,7 +36,7 @@ requested independent review can still justify a separate Astra context.
 - Default to one consult per task, maximum three executed advisor interactions,
   counting follow-ups. Use at most one reconciliation follow-up per question.
 - Announce the topic, model, trigger, and count before each interaction:
-  `Consulting GPT-6 Astra on <decision> (trigger: <reason>, interaction 1/3).`
+  `Consulting GPT-6.2 Astra on <decision> (trigger: <reason>, interaction 1/3).`
 - Aim for an 800-word brief; stay below 1,200 words including excerpts. Provide at
   most five precise file pointers. Request an answer under 300 words.
 - Batch related questions. Follow up only for new evidence or a specific conflict;

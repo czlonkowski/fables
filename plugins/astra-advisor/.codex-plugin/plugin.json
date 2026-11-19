@@ -1,7 +1,7 @@
 {
   "name": "astra-advisor",
-  "version": "0.1.0",
-  "description": "Consult GPT-6 Astra at consequential decision points with evidence, compact briefs, and bounded interactions. Uses native sub-agents in Codex and Codex CLI in Claude Code.",
+  "version": "0.2.0",
+  "description": "Consult GPT-6.2 Astra at consequential decision points with evidence, compact briefs, and bounded interactions. Uses native sub-agents in Codex and Codex CLI in Claude Code.",
   "author": {
     "name": "Romuald Członkowski",
     "email": "romuald@aiadvisors.pl",
@@ -10,8 +10,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Astra Advisor",
-    "shortDescription": "Get a compact GPT-6 Astra second opinion.",
-    "longDescription": "Consult GPT-6 Astra at consequential decision points with evidence, compact briefs, and bounded interactions. Uses native sub-agents in Codex and Codex CLI in Claude Code.",
+    "shortDescription": "Get a compact GPT-6.2 Astra second opinion.",
+    "longDescription": "Consult GPT-6.2 Astra at consequential decision points with evidence, compact briefs, and bounded interactions. Uses native sub-agents in Codex and Codex CLI in Claude Code.",
     "developerName": "Romuald Członkowski",
     "category": "Productivity",
     "capabilities": [],

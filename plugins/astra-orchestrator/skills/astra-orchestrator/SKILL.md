@@ -1,13 +1,13 @@
 ---
 name: astra-orchestrator
-description: Coordinate substantial fact-finding from an Astra session in Codex using native Sol 6.1 and Luna 6 workers, with Astra for justified difficult branches. Use for codebase sweeps, log triage, document corpora, research, and coverage checks with independent reading branches. Keep small shared-context work with the parent; bound worker context, verification, and retries. Compact second-opinion verdicts belong to astra-advisor.
+description: Coordinate substantial fact-finding from an Astra session in Codex using native Terra 6.1, Sol 6.2 and Luna 6 workers, with Astra 6.2 for justified difficult branches. Use for codebase sweeps, log triage, document corpora, research, and coverage checks with independent reading branches. Keep small shared-context work with the parent; bound worker context, verification, and retries. Compact second-opinion verdicts belong to astra-advisor.
 ---
 
 # Astra Orchestrator
 
 Keep planning, decisions, and synthesis with the parent. Move substantial,
 extractable reading into smaller worker contexts. This protocol is designed for a
-`gpt-6-astra` parent in Codex, using native sub-agents only; invoking a skill does
+`gpt-6.2-astra` parent in Codex, using native sub-agents only; invoking a skill does
 not change the parent model. In Claude Code, this orchestration mode is unavailable;
 the `astra-advisor` sibling provides the Codex CLI consultation route. If running
 on another model, disclose that when relevant and delegate only when the same
@@ -37,16 +37,21 @@ particular model. Do not spawn agents merely to demonstrate this skill.
 | Work | Default model | Reasoning |
 |---|---|---|
 | Mechanical inventory, exact pattern extraction, link or format checks | `gpt-6-luna` | `low` |
-| Routine document extraction, log triage, bounded source cross-checks | `gpt-6-luna` | `high` |
-| Code tracing across modules, debugging analysis, or extraction requiring substantial interpretation | `gpt-6.1-sol` | `high` |
-| Bounded Sol branch where extra reasoning is justified by complexity | `gpt-6.1-sol` | `xhigh`, selectively |
-| Difficult independent branch or separately justified evidence review | `gpt-6-astra` | `high`, starting point |
+| Routine document extraction, log triage, bounded source cross-checks, code reading, visual inputs (PDFs, screenshots, drawings) | `gpt-6.1-terra` | `medium`; `high` when interpretation is needed |
+| Code tracing across modules, debugging analysis, extraction requiring substantial interpretation, or specialist legal, tax, or finance research | `gpt-6.2-sol` | `high` |
+| Bounded Sol branch where extra reasoning is justified by complexity | `gpt-6.2-sol` | `xhigh`, selectively |
+| Difficult independent branch or separately justified evidence review | `gpt-6.2-astra` | `high`, starting point |
 
-Sol 6.1 and Luna 6 are the normal worker choices. Terra 5.6 and other 5.6
-workers are legacy options only for an explicit user request or concrete
-task-specific evidence; do not use them as defaults or automatic fallbacks.
-This routing supersedes the earlier preference for Terra over Luna within this
-skill. Use `gpt-6-luna` for Luna 6 and `gpt-6.1-sol` for Sol 6.1.
+Terra 6.1 is the default reader, Sol 6.2 the default analyst, and Luna 6 is
+kept for mechanical work. Terra 6.1 is a strong general model, not only a
+visual one: public benchmarks place it close to Sol on agentic terminal and
+coding work and far above Luna, at half Sol's token price. It is weaker on
+specialist legal, tax, and finance knowledge, where it scores below Luna; route
+that research to Sol. Avoid Terra at `xhigh` or above: its token use rises
+steeply, so a task can cost as much as Sol while scoring lower. Use
+`gpt-6-luna` for Luna 6, `gpt-6.1-terra` for Terra 6.1, `gpt-6.2-sol` for
+Sol 6.2, and `gpt-6.2-astra` for Astra 6.2. 5.6 and earlier 6.x models are
+legacy options only for an explicit user request.
 
 Use an Astra worker when a bounded branch needs subtle multi-step reasoning,
 omission detection, or independent verification that a cheap summary is unlikely
@@ -56,15 +61,16 @@ the parent already has its context. Final judgment and synthesis stay with the
 parent. A compact second-opinion verdict still belongs to `astra-advisor`.
 
 Choose model and effort together based on the branch; do not automatically
-move through a Luna → Sol → Astra ladder. These are operating defaults, not
-measured quality or cost rankings. Earlier pilots using 5.6 workers do not
-establish how Luna 6 and Sol 6.1 compare.
+move through a Luna → Terra → Sol → Astra ladder. These are operating defaults
+based on public benchmarks, not measured results of this protocol. Earlier
+pilots using 5.6 workers do not establish how Terra 6.1, Luna 6, and Sol 6.2
+compare on this workload.
 
 Preserve user overrides and verify current host model and effort availability
-before spawning. If Luna 6 is absent and the user has not pinned Luna, state
-that limitation and choose available Sol 6.1 for a justified branch, or handle
-it locally. If the user pinned an unavailable model, report the blocker rather
-than substitute. Set model and effort on every spawn; inherited Astra settings
+before spawning. If Terra 6.1 or Luna 6 is absent and the user has not pinned
+it, state that limitation and choose the nearest available tier (Terra for Luna,
+Sol 6.2 for Terra) for a justified branch, or handle it locally. If the user
+pinned an unavailable model, report the blocker rather than substitute. Set model and effort on every spawn; inherited Astra settings
 are not deliberate routing. Change a failed brief's model only as the announced,
 justified recovery below.
 
@@ -119,7 +125,7 @@ model-selected contexts. Do not fork the whole parent conversation into workers.
 
 Weigh the findings, implement or write the authorized deliverable, and verify it.
 Report how many workers completed, their actual models, the scope covered, and any
-gaps. Example: `Three workers (two Luna, one Astra) covered the API, jobs, and auth
+gaps. Example: `Three workers (two Terra, one Astra) covered the API, jobs, and auth
 modules; I verified the disputed auth finding and made the final recommendation.`
 
 Do not claim a savings percentage, token count, or bill without measured usage.

@@ -1,6 +1,6 @@
 # fables
 
-**Advisor and orchestrator protocols for Claude Fable and GPT-6 Astra.**
+**Advisor and orchestrator protocols for Claude Fable and GPT-6.2 Astra.**
 
 Each plugin is a small fable about using a premium model well, sharing a moral —
 *judgment belongs on the strongest model, tokens belong on the cheapest one that can do
@@ -10,8 +10,8 @@ the leg.* Same economics, opposite directions:
 |---|---|---|---|
 | [**fable-advisor**](#fable-advisor-consult-up) | consult **up** | Codex or Claude Code | Buy a compact Fable verdict via Claude CLI or a native Claude agent |
 | [**fable-orchestrator**](#fable-orchestrator-delegate-down) | delegate **down** | Fable 5.2 (or any premium model, e.g. Opus 5.5) | Plan big, execute small: push bulk reading to cheap parallel workers, keep only distilled findings at Fable rates |
-| [**astra-advisor**](#astra-advisor-and-astra-orchestrator) | consult **up** | Codex, or Claude Code with Codex CLI | Buy a compact GPT-6 Astra verdict through the host-appropriate route |
-| [**astra-orchestrator**](#astra-advisor-and-astra-orchestrator) | route **deliberately** | GPT-6 Astra in Codex | Use Sol 6.1 and Luna 6 readers, selectively use Astra, and keep synthesis with the parent |
+| [**astra-advisor**](#astra-advisor-and-astra-orchestrator) | consult **up** | Codex, or Claude Code with Codex CLI | Buy a compact GPT-6.2 Astra verdict through the host-appropriate route |
+| [**astra-orchestrator**](#astra-advisor-and-astra-orchestrator) | route **deliberately** | GPT-6.2 Astra in Codex | Use Terra 6.1, Sol 6.2 and Luna 6 readers, selectively use Astra, and keep synthesis with the parent |
 
 Install the Fable plugins in Claude Code:
 
@@ -30,19 +30,24 @@ with explicit GPT model selection and separate runtime routes:
 
 | Skill | In Codex | In Claude Code |
 |---|---|---|
-| `astra-advisor` | Native `gpt-6-astra` sub-agent, fresh context, `high` reasoning by default | Authenticated `codex exec --model gpt-6-astra`, read-only shell sandbox, ephemeral session |
-| `astra-orchestrator` | Astra parent with native Sol 6.1 / Luna 6 workers or a justified Astra branch | Not supported; CLI consultation belongs to the advisor |
+| `astra-advisor` | Native `gpt-6.2-astra` sub-agent, fresh context, `high` reasoning by default | Authenticated `codex exec --model gpt-6.2-astra`, read-only shell sandbox, ephemeral session |
+| `astra-orchestrator` | Astra parent with native Terra 6.1 / Sol 6.2 / Luna 6 workers or a justified Astra branch | Not supported; CLI consultation belongs to the advisor |
 
 The Astra advisor model ID was checked against the local Codex catalog and [official OpenAI
-model documentation](https://developers.openai.com/api/docs/models/gpt-6-astra) on
-2026-09-07. CLI examples were checked against `codex-cli 0.153.4 --help`; account
+model documentation](https://developers.openai.com/api/docs/models/gpt-6.2-astra) on
+2026-11-19. CLI examples were checked against `codex-cli 0.155.0 --help`; account
 access must still be available when invoked. A skill does not switch the parent
 model, and a Claude Code agent's model field cannot select a GPT model.
 
-The orchestrator now prefers Sol 6.1 for code analysis and interpretation, and
-Luna 6 for bounded extraction when the host exposes it. Resolve exact model IDs
-and supported effort levels from the current native tool. Terra 5.6 is a legacy
-option, not a default. This routing update has not been runtime-tested.
+The orchestrator uses Terra 6.1 as the default reader, Sol 6.2 for code analysis,
+interpretation and specialist legal/tax/finance research, Luna 6 for mechanical
+extraction, and Astra 6.2 for justified difficult branches. Terra 6.1 was chosen
+from public benchmarks (2026-11-19): on Vals AI it scores 60.5 on the Vals Index
+and 49.5% on Terminal-Bench 4.0, against Sol 6.2's 66.1 / 60.6% and Luna 6's
+52.3 / 13.6%, at half Sol's token price; it trails Luna on legal and tax research
+and loses its cost edge at `xhigh` and above. Resolve exact model IDs and
+supported effort levels from the current native tool. This routing update has not
+been runtime-tested.
 
 ### Use in Codex
 
@@ -95,8 +100,9 @@ does not define a Claude sub-agent with an unsupported GPT model field.
   parent implements and verifies. Explicit second-opinion requests are honored;
   routine edits and comfort checks do not trigger extra calls.
 - **Orchestrator:** keep small shared-corpus work in one parent context. Use
-  Luna 6/low for mechanical extraction and Luna 6/high for routine bounded reading;
-  use Sol 6.1/high for code analysis, selectively xhigh. Astra/high is a
+  Luna 6/low for mechanical extraction and Terra 6.1/medium–high for routine
+  bounded reading and visual inputs; use Sol 6.2/high for code analysis and
+  specialist research, selectively xhigh. Astra/high is a
   starting point for a difficult independent branch or justified evidence review.
   A declared reasoning-gap escalation can consume the brief's single retry;
   access failures do not trigger fallback. At most six worker interactions,
@@ -110,7 +116,7 @@ These are operating defaults. A 2026-09-14 pilot using older workers (three ques
 files, one attempt per configuration) favored one bundled Astra session; among
 delegated configurations, Luna/high plus Astra verification cost less than the
 prior Luna/low, Terra/medium, Sol/high mix. This does not prove savings on larger
-workloads or establish a ranking for Luna 6 and Sol 6.1. API prices, subscription usage, caching, reasoning, verification, and
+workloads or establish a ranking for Terra 6.1, Luna 6 and Sol 6.2. API prices, subscription usage, caching, reasoning, verification, and
 retries affect actual cost; no Fable savings or trigger benchmark is claimed for
 Astra. The scenarios in `evals/astra-advisor.json` and
 `evals/astra-orchestrator.json` cover consult restraint, exact model selection,
@@ -313,8 +319,8 @@ context windows and report back distilled findings.
 ### Why
 
 Most substantial tasks are two jobs in one: a little judgment and a lot of mechanical
-reading. On a Fable 5.2 session both bill at **$8/$40 per MTok** — 4× Sonnet 5.5, 8×
-Haiku 4.5 — unless the reading is moved. On Opus 5.5 ($4/$20) the gap to Sonnet shrinks
+reading. On a Fable 5.2 session both bill at **$8/$40 per MTok** — 4× Sonnet 5.5, 80×
+Haiku 5.5 (16× for prompts over 100K tokens) — unless the reading is moved. On Opus 5.5 ($4/$20) the gap to Sonnet shrinks
 to 2×, but it's still there. (Prices as of 2026-11.)
 
 And there's a trap that makes naive delegation useless: **subagents inherit the session
@@ -344,8 +350,9 @@ reading — sweeping code, triaging logs, reviewing documents, researching the w
 consult the fable-orchestrator skill before reading the material yourself.
 ```
 
-Requirements: Claude Code with Sonnet/Haiku available as subagent models (the `sonnet`
-alias resolves to Sonnet 5.5 from Claude Code 2.1.284). Designed for sessions where the
+Requirements: Claude Code with Sonnet/Haiku available as subagent models (on the Anthropic API the
+`sonnet` alias resolves to Sonnet 5.5 and `haiku` to Haiku 5.5; on Bedrock, Google's Agent
+Platform, and Foundry both resolve to the 4.5 generation unless pinned). Designed for sessions where the
 base model is Fable 5.2; the protocol applies from any premium orchestrator, including
 Opus 5.5.
 
@@ -369,7 +376,7 @@ Fewer, bigger briefs: each spawn has a floor cost, and the cookbook found
 over-splitting *raised* the bill.
 
 **The discipline:**
-- `haiku` for mechanical sweeps, `sonnet` for reading judgment, never Fable for workers
+- `haiku` (Haiku 5.5) for mechanical sweeps and schema-shaped extraction, `sonnet` for reading judgment, never Fable for workers
 - Decisions, plans, and synthesis never delegated down — workers report facts
 - One premise-verification worker when the fan-out rests on an assumed list (the
   cookbook's own run verified 20 facts perfectly against a park list that was wrong)

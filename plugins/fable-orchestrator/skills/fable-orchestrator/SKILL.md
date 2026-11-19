@@ -6,7 +6,8 @@ description: Delegation protocol for sessions running on Claude Fable 5.2 (or an
 # Fable Orchestrator — plan big, execute small
 
 You are an expensive model orchestrating a session: Fable 5.2 bills **$8/$40 per MTok —
-4× Sonnet 5.5 ($2/$10) and 8× Haiku 4.5 ($1/$5), as of 2026-11**. On Opus 5.5
+4× Sonnet 5.5 ($2/$10) and 80× Haiku 5.5 ($0.10/$0.50 for prompts up to 100K tokens;
+$0.50/$2.50 above, so 16×), as of 2026-11**. On Opus 5.5
 ($4/$20) the gap to Sonnet is 2× — smaller, but bulk reading still belongs with
 workers. Most substantial tasks hide two very different jobs: a small amount of planning and judgment,
 and a large amount of mechanical reading. Your judgment is why the user runs you. The
@@ -101,10 +102,23 @@ Always cap the report length and state its shape — worker output is what enter
 premium context, and an unshaped report arrives as a costly essay.
 
 **Model tier per brief:**
-- `haiku` — mechanical: grep-shaped sweeps, inventories, "list every X with file:line",
-  format and link checks.
-- `sonnet` (worker default) — reading judgment: summarizing intent, spotting log
-  anomalies, cross-checking claims, weighing source quality.
+- `haiku` (Haiku 5.5) — mechanical and structured: grep-shaped sweeps, inventories,
+  "list every X with file:line", format and link checks, plus extraction,
+  classification, and summaries against a fixed output shape. Scope each brief so
+  its prompt stays under ~100K tokens (above that Haiku bills 5× more), and pass
+  `effort` medium or high where the host exposes it, not max (max burns ~3× the
+  tokens). Not for agentic or terminal diagnosis, log root-cause work, tax or
+  finance nuance, or checks where an *absence* is the finding — public benchmarks
+  put it far below Sonnet there (Terminal-Bench 4.0: ~36% vs ~64% on Vals AI).
+- `sonnet` (worker default, Sonnet 5.5) — reading judgment: summarizing intent,
+  spotting log anomalies, cross-checking claims, weighing source quality, and
+  anything Haiku is ruled out for above. It scores within about a point of Opus 5.5
+  on the Vals Index at roughly two-thirds of the cost per task; reach for `opus` only
+  for an exceptional judgment-heavy branch.
+- Check the provider: the aliases above mean Haiku 5.5 / Sonnet 5.5 on the Anthropic
+  API, but on Bedrock, Google's Agent Platform, and Foundry `haiku` and `sonnet`
+  resolve to the 4.5 generation. Pin with `ANTHROPIC_DEFAULT_HAIKU_MODEL` /
+  `ANTHROPIC_DEFAULT_SONNET_MODEL` or full model IDs if that matters for the task.
 - Never Fable for workers. And never delegate the *decision* down: workers report
   facts; the weighing, the plan, and the synthesis are yours.
 

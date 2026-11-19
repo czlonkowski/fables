@@ -15,11 +15,11 @@
         "ARCHITECTURE.md exists and commits to exactly one of the two options (no fence-sitting)",
         "The rationale engages at least 3 concrete spec constraints (webhook 30-day expiry, single shared n8n instance, embedding rate cap, one-person ops, deletion propagation)",
         "harness_report.json exists and is valid JSON",
-        "[with_skill only] Exactly one Astra consult that executed using gpt-6-astra (spawn attempts rejected before running don't count)",
+        "[with_skill only] Exactly one Astra consult that executed using gpt-6.2-astra (spawn attempts rejected before running don't count)",
         "[with_skill only] Astra consult briefing under 1200 words",
         "[with_skill only] Final message announces the consult and relays the verdict",
         "[without_skill only] No Astra sub-agent or CLI invocation",
-        "[with_skill only] Any consult in Codex uses a native sub-agent with explicit gpt-6-astra model and fresh context; no nested Codex CLI process"
+        "[with_skill only] Any consult in Codex uses a native sub-agent with explicit gpt-6.2-astra model and fresh context; no nested Codex CLI process"
       ]
     },
     {
@@ -36,7 +36,7 @@
         "harness_report.json exists and is valid JSON",
         "Zero Astra sub-agent or CLI invocations — consulting here is the cost failure the skill must prevent",
         "Diff stays small and focused (no refactors or unrelated changes)",
-        "[with_skill only] Any consult in Codex uses a native sub-agent with explicit gpt-6-astra model and fresh context; no nested Codex CLI process"
+        "[with_skill only] Any consult in Codex uses a native sub-agent with explicit gpt-6.2-astra model and fresh context; no nested Codex CLI process"
       ]
     },
     {
@@ -54,10 +54,10 @@
         "Fixes flaw 3: explicit rollback path to SQLite",
         "Fixes flaw 4: stops container / deactivates workflows before export",
         "harness_report.json exists and is valid JSON",
-        "[with_skill only] Exactly one Astra consult that executed using gpt-6-astra, briefing under 1200 words",
+        "[with_skill only] Exactly one Astra consult that executed using gpt-6.2-astra, briefing under 1200 words",
         "[with_skill only] Final message announces the consult and relays the verdict",
         "[without_skill only] No Astra sub-agent or CLI invocation",
-        "[with_skill only] Any consult in Codex uses a native sub-agent with explicit gpt-6-astra model and fresh context; no nested Codex CLI process"
+        "[with_skill only] Any consult in Codex uses a native sub-agent with explicit gpt-6.2-astra model and fresh context; no nested Codex CLI process"
       ]
     },
     {
@@ -76,10 +76,10 @@
         "Fixes flaw 4: adds caps or stop criteria (turns, tokens, or max actions per run)",
         "Fixes flaw 5: guards against duplicate GitHub issues across runs",
         "harness_report.json exists and is valid JSON",
-        "[with_skill only] Exactly one Astra consult that executed using gpt-6-astra (loop-design trigger), briefing under 1200 words",
+        "[with_skill only] Exactly one Astra consult that executed using gpt-6.2-astra (loop-design trigger), briefing under 1200 words",
         "[with_skill only] Final message announces the consult and relays the verdict",
         "[without_skill only] No Astra sub-agent or CLI invocation",
-        "[with_skill only] Any consult in Codex uses a native sub-agent with explicit gpt-6-astra model and fresh context; no nested Codex CLI process"
+        "[with_skill only] Any consult in Codex uses a native sub-agent with explicit gpt-6.2-astra model and fresh context; no nested Codex CLI process"
       ]
     },
     {
@@ -92,7 +92,7 @@
       ],
       "expected_output": "One successful Astra verdict through Codex CLI, then a parent recommendation.",
       "assertions": [
-        "One announced codex exec invocation explicitly selects gpt-6-astra, read-only sandbox and ephemeral mode",
+        "One announced codex exec invocation explicitly selects gpt-6.2-astra, read-only sandbox and ephemeral mode",
         "The advisor prompt and brief are passed on stdin; output is read only after successful process completion",
         "No Claude Agent call attempts to use a GPT model",
         "Parent relays the verdict and distinguishes its final judgment"
@@ -101,7 +101,7 @@
     {
       "id": 5,
       "name": "unavailable-native-model",
-      "host": "Codex with native spawn mocked to reject gpt-6-astra before execution",
+      "host": "Codex with native spawn mocked to reject gpt-6.2-astra before execution",
       "prompt": "Use astra-advisor to review the architecture choice in SPEC.md.",
       "files": [
         "evals/fixtures/eval-0/SPEC.md"

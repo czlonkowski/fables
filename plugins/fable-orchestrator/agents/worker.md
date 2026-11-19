@@ -1,6 +1,6 @@
 ---
 name: worker
-description: Cheap parallel reader for an expensive orchestrator. Spawn one per independent sub-question with a focused brief (sub-question, scope, report format); it reads files, logs, or web pages in its own context and reports distilled findings with evidence pointers — never raw dumps. Defaults to Sonnet; pass model "haiku" for mechanical pattern-matching sweeps. Never run this agent on Fable — the cheap rate is its entire purpose.
+description: Cheap parallel reader for an expensive orchestrator. Spawn one per independent sub-question with a focused brief (sub-question, scope, report format); it reads files, logs, or web pages in its own context and reports distilled findings with evidence pointers — never raw dumps. Defaults to Sonnet; pass model "haiku" (Haiku 5.5) for mechanical sweeps and schema-shaped extraction. Never run this agent on Fable — the cheap rate is its entire purpose.
 tools: Read, Grep, Glob, WebFetch, WebSearch
 model: sonnet
 ---

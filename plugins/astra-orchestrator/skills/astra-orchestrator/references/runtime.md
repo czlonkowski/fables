@@ -1,10 +1,11 @@
 # Running GPT reading workers
 
-Use Codex native sub-agents with Sol 6.1 and Luna 6 as the normal workers,
-and Astra for justified difficult branches. Check the current native tool's
-supported model IDs and effort values before spawning. Use `gpt-6-luna` for
-Luna 6 and `gpt-6.1-sol` for Sol 6.1. A catalog entry is not proof of a
-successful run.
+Use Codex native sub-agents with Terra 6.1, Sol 6.2 and Luna 6 as the normal
+workers, and Astra 6.2 for justified difficult branches. Check the current native
+tool's supported model IDs and effort values before spawning. Use `gpt-6-luna`
+for Luna 6, `gpt-6.1-terra` for Terra 6.1, `gpt-6.2-sol` for Sol 6.2 and
+`gpt-6.2-astra` for Astra 6.2 (checked against the Codex CLI 0.155.0 catalog on
+2026-11-19). A catalog entry is not proof of a successful run.
 
 ## Codex native delegation
 
@@ -14,8 +15,8 @@ context. For a host exposing `collaboration.spawn_agent`, an example is:
 ```json
 {
   "task_name": "auth_inventory",
-  "model": "gpt-6.1-sol",
-  "reasoning_effort": "high",
+  "model": "gpt-6.1-terra",
+  "reasoning_effort": "medium",
   "fork_turns": "none",
   "message": "<worker.md contents followed by the completed brief>"
 }
@@ -23,10 +24,10 @@ context. For a host exposing `collaboration.spawn_agent`, an example is:
 
 Use the skill's routing table for other model/effort choices. Omit fixed-model
 agent roles that pin older models, such as `azure_luna` or `azure_terra`, when
-selecting Luna 6 or Sol 6.1. Before any spawn, an unavailable unpinned Luna 6 may
-be routed to available Sol 6.1 with a stated reason, as described in the skill;
+selecting Luna 6, Terra 6.1 or Sol 6.2. Before any spawn, an unavailable unpinned
+Luna 6 or Terra 6.1 may be routed to the next available tier with a stated reason, as described in the skill;
 this is not a retry after a failed call. For a justified
-Astra branch, explicitly set `model: "gpt-6-astra"` and the selected effort
+Astra branch, explicitly set `model: "gpt-6.2-astra"` and the selected effort
 (`high` is the starting point); do not rely on parent inheritance. State why
 Astra is useful for that branch. A reasoning-gap escalation consumes the brief's
 single retry; access/authentication/quota failures do not trigger model fallback.

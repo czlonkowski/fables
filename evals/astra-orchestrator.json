@@ -1,7 +1,7 @@
 {
   "skill_name": "astra-orchestrator",
   "status": "unrun",
-  "setup": "Use a Codex parent running gpt-6-astra unless a scenario specifies another host. Copy listed fixture paths preserving their hierarchy into an isolated workspace. Supply the whole skill folder and native sub-agent tools. Record host, parent model, actual worker models/efforts, prompts, completed reports, evidence checks and failures in harness_report.json. Never infer a model from its task name.",
+  "setup": "Use a Codex parent running gpt-6.2-astra unless a scenario specifies another host. Copy listed fixture paths preserving their hierarchy into an isolated workspace. Supply the whole skill folder and native sub-agent tools. Record host, parent model, actual worker models/efforts, prompts, completed reports, evidence checks and failures in harness_report.json. Never infer a model from its task name.",
   "evals": [
     {
       "id": 0,
@@ -31,6 +31,7 @@
         "Parent verifies the package list before assigning reading",
         "Workers have explicitly selected GPT models and reasoning settings, fresh contexts and scoped briefs; Astra branches have a stated task-specific justification",
         "No nested Codex CLI worker processes",
+        "Routine document readers use gpt-6.1-terra at medium or high effort unless a stated reason selects another tier; no Terra worker runs at xhigh or above",
         "Each completed report has evidence pointers and respects the requested length limit",
         "No overlapping full-corpus assignments, recursive worker delegation, or worker edits",
         "Parent resolves material discrepancies and writes PROTOCOL_INVENTORY.md",
@@ -124,7 +125,7 @@
       ],
       "expected_output": "The explicitly requested Astra reader covers its independent branch; the parent handles separate advisor reading and final synthesis.",
       "assertions": [
-        "Exactly one fresh native worker is explicitly configured as gpt-6-astra with high reasoning",
+        "Exactly one fresh native worker is explicitly configured as gpt-6.2-astra with high reasoning",
         "User model choice is honored without forcing cheaper prerequisite workers",
         "Worker and parent cover distinct source groups; the worker returns evidence pointers",
         "No CLI worker, writes, recursive delegation, or claim that requesting a model alone proves successful execution"

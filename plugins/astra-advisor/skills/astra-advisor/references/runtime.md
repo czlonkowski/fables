@@ -2,18 +2,18 @@
 
 Route by host: native sub-agents in Codex, Codex CLI in Claude Code. Do not fall
 back to nested CLI sessions from Codex. Defaults were checked on 2026-09-07 against
-Codex CLI 0.153.4 and its local model catalog: `gpt-6-astra`, reasoning `high`.
+Codex CLI 0.155.0 and its local model catalog (2026-11-19): `gpt-6.2-astra`, reasoning `high`.
 
 ## Codex native delegation
 
 Use the native agent tool if it accepts the requested model. Explicitly select
-`gpt-6-astra` and `high`, with a fresh context. For a host exposing
+`gpt-6.2-astra` and `high`, with a fresh context. For a host exposing
 `collaboration.spawn_agent`, the arguments are:
 
 ```json
 {
   "task_name": "astra_consult_1",
-  "model": "gpt-6-astra",
+  "model": "gpt-6.2-astra",
   "reasoning_effort": "high",
   "fork_turns": "none",
   "message": "<advisor.md contents followed by the completed brief>"
@@ -43,7 +43,7 @@ local model picker/catalog. Create `brief.txt` with the advisor prompt followed 
 the packet in a task-specific temporary directory. Use the target project as CWD:
 
 ```bash
-codex exec --model gpt-6-astra \
+codex exec --model gpt-6.2-astra \
   -c 'model_reasoning_effort="high"' \
   --sandbox read-only --ephemeral --color never \
   --cd "$task_project" \
@@ -68,7 +68,7 @@ budget. On access, quota, or model errors, stop and report the error; no silent 
 fallback or automatic paid retry. If a sandbox blocks authentication, distinguish
 that from missing login and use the host's normal approval path if authorized.
 
-Sources: [Astra model](https://developers.openai.com/api/docs/models/gpt-6-astra),
+Sources: [Astra model](https://developers.openai.com/api/docs/models/gpt-6.2-astra),
 [Codex subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents).
 Public API reasoning levels and host-specific levels can differ. `high` is the
 portable default here; do not assume `ultra` is an API reasoning value.
